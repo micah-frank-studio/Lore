@@ -8,7 +8,6 @@
 ;Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
 ;NonCommercial — You may not use the material for commercial purposes.
 ;No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
-// Wind w treble texture
 
 <Cabbage>
 
@@ -92,15 +91,14 @@ iXYPadBounds[] cabbageGet sprintfk("%s", SPadName), "bounds"
             kMouseLeftDown=1				
     else
         kMouseLeftDown chnget "MOUSE_DOWN_LEFT"
-        ;kMouseRightDown chnget "MOUSE_DOWN_RIGHT"        
         kXPos chnget "MOUSE_X"
         kYPos chnget "MOUSE_Y"
    endif
 
-   ; if kMouseLeftDown<1 then
-        cabbageSet metro(80), SControl, sprintfk("rotate(%f,%f,%f)", kradians, kBallSize/2, kBallSize/2)
-        kradians = kradians+rspline(-0.001, 0.001, 0.1, 1)
-   ; endif       
+  
+    cabbageSet metro(80), SControl, sprintfk("rotate(%f,%f,%f)", kradians, kBallSize/2, kBallSize/2)
+    kradians = kradians+rspline(-0.001, 0.001, 0.1, 1)
+      
     kAutomation init 0
     iSensitivity = 0.4
     kDistanceFromCentre init 0				
@@ -117,37 +115,6 @@ iXYPadBounds[] cabbageGet sprintfk("%s", SPadName), "bounds"
         cabbageSet 1-kimageRate, SControl, "file", Simage2 ;image 2
    endif 
 
-    
-/*
-    if changed(kMouseRightDown) == 1 then
-        if kMouseRightDown == 1 then
-            kXDown = kXPos
-            kYDown = kYPos
-        else
-            kVel = sqrt(pow:k(kXDown-kXPos, 2)+pow:k(kYDown-kYPos, 2))/iPadWidth
-            kAutomation = 1
-            kIncrX = (kXPos-kXDown)*kVel*iSensitivity
-            kIncrY = (kYPos-kYDown)*kVel*iSensitivity
-            kXUp = kXPos-iBallSize/2
-            kYUp = kYPos-iBallSize/2
-        endif
-    endif
-
-    if kAutomation == 1 then 
-        kYUp += (kIncrY)
-        kXUp += (kIncrX)
-        
-        cabbageSet 1, SControl, "bounds", kXUp+kIncrX, kYUp+kIncrY, kBallSize, kBallSize 
-        
-        kCurrentX = kXUp+kIncrX+kBallSize/2
-        kCurrentY = kYUp+kIncrY+kBallSize/2
-        
-        kDistanceFromCentre = 1 - (sqrt(pow:k(iPadCentreX-(kXUp+kIncrX), 2)+pow:k(iPadCentreY-(kYUp+kIncrY), 2)))/(iPadWidth/2)         
-        kRight trigger kXUp, iPadLeft+iPadWidth-kBallSize, 0
-        kLeft trigger kXUp, iPadLeft, 1
-        kBottom trigger kYUp, iPadTop+iPadHeight-kBallSize, 0
-        kTop trigger kYUp, iPadTop, 1
-    endif */
     kOutX = (kCurrentX-iPadLeft-iBallSize/2)/(iPadWidth-iBallSize)
     kOutY = (kCurrentY-iPadTop-iBallSize/2)/(iPadHeight-iBallSize)
     xout tonek(kOutX, 10), tonek(kOutY, 10)  
@@ -172,11 +139,11 @@ Move the left and right cystals to get variations in timbre, generation rate, fi
 
 - Self/Sync will enable generation only when the host transport is running.  
 - MIDI note input will change the base pitch of the sequence
-- Drone controls the level of the substractive sustained tone.
+- Drone controls the level of the subtractive sustained tone.
 - Bubbles is a sharp LFO that can create rapid tonal changes in the percussive voices.
 - Width controls the width of auto-panning.
-- Space changes feedabck, reflections and room size.
-- (A)utomate will automate sphere movement.
+- Space changes feedback, reflections and room size.
+- (A)utomate will automate crystal movement.
 - (R)ecord will render the output to an audio file on disk.
 
 Sound design & programming by Micah Frank
@@ -187,18 +154,20 @@ Puremagnetik - Brooklyn, NYC
 
 kplaying chnget "IS_PLAYING"
 ksync chnget "SyncMode"
-if (ksync > 0) then
-    if (active(2)) > 0 && changed:k(ksync) == 1 then
-        turnoff2 2, 0, 0
+if (ksync > 0) then ; if sync to host is on
+    if (active(2)) > 0 && changed:k(ksync) == 1 then ;if it's already playing and sync mode changed
+        turnoff2 2, 0, 0 ;turnoff seq
+        turnoff2 99, 0, 0 ;turnoff drone
     endif
-    if (kplaying = 1) then
+    if (kplaying = 1) then ; if transport is playing start seq instrument
         schedkwhennamed kplaying, 0, 1, 2, 0, 500000
     else
-        turnoff2 2, 0, 0 
+        turnoff2 2, 0, 0 ; turnoff seq
+        turnoff2 99, 0, 0 ; turnoff drone
     endif
 endif
-if ksync < 1 then
-    schedkwhennamed 1, 0, 1, 2, 0, 500000
+if ksync < 1 then ; if sync to host is off
+    schedkwhennamed 1, 0, 1, 2, 0, 500000 ; start sequencer
 endif
 endin
 
@@ -221,12 +190,12 @@ kpulse = kQuarterNoteInHz*idiv[kdivSelect]
     kstatus, kchan, knote, kdata2 midiin
     if (changed:k(knote)) == 1 && kstatus == 144 then ; if it's a new note
         krootnote = knote
-        turnoff2 "drone", 1, 0
-        event "i", "drone", 0, 500000, krootnote ; reset drone to new root
+        turnoff2 99, 1, 0
+        event "i", 99, 0, 500000, krootnote ; reset drone to new root
     endif
     schedkwhennamed ktrigKlome, 0, 30, "Klome", 0, 0.5, krootnote
     schedkwhennamed ktrigSpur, 0, 30, "Spur", 0, 0.5, krootnote ; init Spur with krootnote
-    schedule "drone", 0, 500000, krootnote
+    schedule 99, 0, 500000, krootnote
 endin
 
 instr Klome
@@ -315,7 +284,7 @@ chnmix alpfR*ksend, "verbSendR"
 
 endin
 
-instr 99, drone
+instr 99
 kdrone chnget "Drone"
 kcps = cpsmidinn(p4)
 ksegrate = abs(rspline(0.3, 2, 0.1, 0.001))
