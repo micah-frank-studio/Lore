@@ -10,7 +10,7 @@
 ;No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
 
 <Cabbage>
-form caption("Paradigm") size(500, 500), guiMode("queue"), pluginId("pm43"), typeface("includes/Oxygen-Light.ttf")
+form caption("Paradigm") size(500, 500), guiMode("queue"), pluginId("pm43"), opcodeDir("."), typeface("includes/Oxygen-Light.ttf")
 image bounds(5, 20, 244, 350), channel("XYPad1")
 image bounds(251, 20, 244, 350), channel("XYPad2")
 image bounds(0, 0, 500, 500), file("includes/Paradigm.png")
@@ -189,7 +189,6 @@ endin
 instr 2
 //# BPM Sync and Sequence Trigger
 kbpm chnget "HOST_BPM" ; get host bpm
-;kppq chnget "HOST_PPQ_POS"
 kQuarterNoteInHz = kbpm/60 ; calculate quarter notes
 idiv[] fillarray 0.25, 0.5, 1, 2, 4 ;beat divisions - whole to 16th
 kdivSelect=rspline(0, 4, 0.1, 2) ; controller to change length of beat divisions
@@ -200,7 +199,6 @@ kpulse = kQuarterNoteInHz*idiv[kdivSelect]
 inoteinit = random(36, 47)
 krootnote init inoteinit 
 kstatus, kchan, knote, kdata2 midiin
-;krootnote = (changed:k(knote)) == 1 ? knote : krootnote ; filter out continuous midi info
 if (changed:k(knote)) == 1 && kstatus == 144 then ; if it's a new note
     krootnote = knote
 endif
