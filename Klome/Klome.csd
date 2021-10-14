@@ -25,7 +25,7 @@ groupbox bounds(0, 0, 500, 436) channel("Settings"), text(""), visible(0) $GROUP
     image bounds(0, 0, 500, 436), colour("0,0,0,220")
     texteditor bounds(30, 30, 450, 400), text(""), fontSize(15), channel("InfoText"), scrollbars(0), wrap(1), fontColour(255, 255, 255, 200), colour(0, 0, 0, 0), readOnly(1)
     button bounds(390, 398, 45, 22), latched(1), text("SELF", "SYNC"), channel("SyncMode") $BUTTON1
-    rslider bounds(60, 362, 60, 60), channel("Drone"), text("DRONE"), range(0, 1, 0.6, 1, 0.001)  $KNOB1
+    rslider bounds(60, 362, 60, 60), channel("Drone"), text("DRONE"), range(0, 1, 0.45, 1, 0.001)  $KNOB1
     rslider bounds(130, 362, 60, 60), channel("Bubbles"), text("BUBBLES"), range(0.001, 80, 30, 1, 0.001)  $KNOB1
     rslider bounds(200, 362, 60, 60), channel("Width"), text("WIDTH"), range(0, 1, 0.8, 1, 0.001)  $KNOB1
     rslider bounds(270, 362, 60, 60), channel("Space"), text("SPACE"), range(0, 1, 0.7, 1, 0.001)  $KNOB1
@@ -182,7 +182,7 @@ kpulse = kQuarterNoteInHz*idiv[kdivSelect]
     kbarRate=metro(kpulse*2*gkXBot) ; bar trigger is 4x and scaled by Left X
     
     kSpurPulse = rspline(3, 30*(1-gkYTop), 2, 0.05)
-    ktrigKlome=metro(kpulse*8*(1-gkYTop))
+    ktrigKlome=metro(kpulse*4*(1-gkYTop))
     ktrigSpur=metro(kSpurPulse)
     //# MIDI note handling
     inoteinit = random(48, 56)
@@ -193,8 +193,8 @@ kpulse = kQuarterNoteInHz*idiv[kdivSelect]
         turnoff2 99, 1, 0
         event "i", 99, 0, 500000, krootnote ; reset drone to new root
     endif
-    schedkwhennamed ktrigKlome, 0, 30, "Klome", 0, 0.5, krootnote
-    schedkwhennamed ktrigSpur, 0, 30, "Spur", 0, 0.5, krootnote ; init Spur with krootnote
+    schedkwhennamed ktrigKlome, 0, 8, "Klome", 0, 0.3, krootnote
+    schedkwhennamed ktrigSpur, 0, 8, "Spur", 0, 0.5, krootnote ; init Spur with krootnote
     schedule 99, 0, 500000, krootnote
 endin
 
@@ -226,7 +226,7 @@ kbcR = int(random(1,3))
 iK = random(1, 3)
 iT30 = random(0.1, 2)
 ib = random(0.01, 0.001)
-kscan = random(0.01, 0.03)
+kscan = 0.5 ;random(0.01, 0.03)
 ipos = random(0.01,1) 
 ivel = random(600, 1000)
 iwid = random(0.01, 0.1)
@@ -310,7 +310,7 @@ aVerbinR chnget "verbSendR"
 adelL init 0
 adelR init 0
 kfb = abs(jspline(0.6*chnget:k("Space"), 0.1, 0.01))
-adel = rspline(100, 1000, 0.1, 0.5)
+adel = rspline(100, 300, 0.01, 0.2)
 aoffset = rspline(30, 200, 0.1, 0.5)
 adelL vdelay aDelinL+(adelL*kfb), adel, 1000
 adelR vdelay aDelinR+(adelR*kfb), adel+aoffset, 1000
