@@ -6,3 +6,5 @@ Inspired by the Native Instruments Spektral Delay of the early millennium this p
 
 This is the open-source version of Spectral Delay. You can download the source file and compile the plugin in Cabbage.
 https://cabbageaudio.com/
+
+See the video walkthrough: https://www.youtube.com/watch?v=LMz0rMqM1BU
