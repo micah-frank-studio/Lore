@@ -1,11 +1,11 @@
 # Lore
 Puremagnetik Lore
 
-![Image of Lore](https://github.com/micah-frank-studio/Lore/blob/main/Lore_StudioShot.jpg)
+![Image of Lore](https://github.com/micah-frank-studio/Lore/blob/main/Lore%20Experimental%20Sound%20Console/Lore_StudioShot.jpg)
 
 An Open-Source Advanced Sound Design Workstation.
 
-This is where you can compile Lore on your own. You need to download the Lore folder and compile everything in Cabbage (the "IDE" for Csound)
+This is where you can compile Lore on your own. You need to download the Lore folder and compile everything in Cabbage (the "IDE" for Csound) http://cabbageaudio.com
 
 Lore isn't simply a synth or effect but a crowd-funded, continuously updated environment for manipulating and processing sounds.
 
