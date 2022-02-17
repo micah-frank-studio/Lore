@@ -11,7 +11,7 @@
 
 form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), typeface("includes/Inconsolata-Regular.ttf"), opcodeDir("."), bundle("./includes")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
-#define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("0,0,0,0"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
+#define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0")
 image bounds(0,0,970,1000) file("includes/lore-bg.png")
 
@@ -314,7 +314,8 @@ mouseListen 107, "FBMatrixL"
 mouseListen 109, "FBMatrixR"
 
 //# RANDOM Function
-if chnget:k("Random") > 0 then
+if changed(chnget:k("Random")) > 0 then
+    if chnget:k("Random") > 0 then
     krandcnt = 0
     loadRandVals:
     if krandcnt < gibands then
@@ -338,7 +339,8 @@ if chnget:k("Random") > 0 then
     updateTable 105, "DelMatrixR"
     updateTable 103, "DelMatrixL"
     updateTable 109, "FBMatrixR"
-    updateTable 107, "FBMatrixL"   
+    updateTable 107, "FBMatrixL" 
+    endif  
 endif
 
 kLModeVal, kLmode cabbageGet "TimeFeedModeL"
