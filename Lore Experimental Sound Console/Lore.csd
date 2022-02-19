@@ -67,7 +67,7 @@ label bounds(5,0,400,16), align("left"), text("GRANULAR CONTROLS ---------------
 hslider bounds(0, 30, 200, 20), channel("Pitch1"), text("PITCH"), range(-2, 2, 1, 1, 0.0)  $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("Stretch1"), text("STRETCH"), range(0.01, 2, 0.287, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("Density1"), text("DENSITY"), range(2, 32, 8, 1, 0.001) $SLIDER1
-hslider bounds(210, 55, 200, 20), channel("Size1"), text("SIZE"), range(0.1, 1, 0.43, 1, 0.001) $SLIDER1
+hslider bounds(210, 55, 200, 20), channel("Size1"), text("SIZE"), range(0.01, 3, 0.43, 1, 0.001) $SLIDER1
 hslider bounds(420, 30, 200, 20), channel("Start"), text("START"), range(0, 1, 0, 1, 0.001) $SLIDER1 
 hslider bounds(420, 55, 200, 20), channel("End"), text("END"), range(0, 1, 1, 1, 0.001) $SLIDER1 
 hslider bounds(630, 30, 200, 20), channel("Filter1"), text("FREQ"), range(10, 9000, 4000, 0.5, 0.001) $SLIDER1 
@@ -280,19 +280,24 @@ if kinitTables < 1 then
     kinitTables = 100
 endif
  
+
 gSFile=chnget:S("File")
+gSDroppedSFile, kDroppedTrig cabbageGet "LAST_FILE_DROPPED"
+if kDroppedTrig == 1 then
+   ;gSFile sprintfk "%s", gSDroppedSFile
+   cabbageSetValue "File", gSDroppedSFile, kDroppedTrig
+   ;cabbageSet 1, "File", gSDroppedSFile
+endif
+
 
 if changed(gSFile) > 0 then 
     turnoff2 2, 0, 0
-    printf "%s\n", k(1), gSFile
         kpos  strrindexk gSFile, "/"  ;look for the rightmost '/'
         Snam   strsubk    gSFile, kpos+1, -1    ;extract the substring
         Snam   strsubk    Snam, 0, 12 ; truncate string to x characters so it fits in display
         SMessage sprintfk "text(\"%s\") ", Snam
         cabbageSet 1, "File", SMessage
 endif 
-
-
 
 ki2 active 2
 if ki2 > 0 && chnget:k("PlayMode") < 1 then; if instr 2 is running and stop mode is activated, turnoff 2
