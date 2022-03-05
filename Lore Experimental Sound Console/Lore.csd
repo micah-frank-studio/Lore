@@ -43,6 +43,14 @@ groupbox bounds(16,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickn
     combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape1")
 
 }
+groupbox bounds(437,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
+    label bounds(5,0,400,16), align("left"), text("ROUTING -----------------------------------------------"), fontSize(15) 
+    ;hslider bounds(0,30, 200, 20), channel("SpectralModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
+    ;hslider bounds(0,55, 200, 20), channel("SpectralModAmount1"), range(0,1,0.2,1), text ("AMOUNT") $SLIDER1
+    ;combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1")
+    combobox bounds(0, 30, 100, 20), items("PARALLEL","SPEC > GRAIN","GRAIN > SPEC"), channel("audioRouting"), automatable(0)
+
+}
 
 groupbox bounds(225,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
     hslider bounds(0,30, 200, 20), channel("SpectralModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
@@ -66,7 +74,7 @@ groupbox bounds(16,450,855,200), colour(0,0,0,0), lineThickness(0),outlineThickn
 label bounds(5,0,400,16), align("left"), text("GRANULAR CONTROLS --------------------------------------"), fontSize(15) 
 hslider bounds(0, 30, 200, 20), channel("Pitch1"), text("PITCH"), range(-2, 2, 1, 1, 0.0)  $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("Stretch1"), text("STRETCH"), range(0.01, 2, 0.287, 1, 0.001) $SLIDER1
-hslider bounds(210, 30, 200, 20), channel("Density1"), text("DENSITY"), range(2, 32, 8, 1, 0.001) $SLIDER1
+hslider bounds(210, 30, 200, 20), channel("Density1"), text("DENSITY"), range(2, 12, 8, 1, 0.001) $SLIDER1
 hslider bounds(210, 55, 200, 20), channel("Size1"), text("SIZE"), range(0.01, 3, 0.43, 1, 0.001) $SLIDER1
 hslider bounds(420, 30, 200, 20), channel("Start"), text("START"), range(0, 1, 0, 1, 0.001) $SLIDER1 
 hslider bounds(420, 55, 200, 20), channel("End"), text("END"), range(0, 1, 1, 1, 0.001) $SLIDER1 
@@ -185,6 +193,26 @@ opcode mouseListen, 0, iS
             updateTable iTable, SVGChannel
         endif
     endif
+endop
+
+//# AUDIO ROUTER
+opcode audioRoute, aaaa, aaaaaak
+    ainL, ainR, aSpecL, aSpecR, aGrainL, aGrainR, kroute xin ;1 = line in, 2 = spectral, 3 = granular
+    if kroute == 1 then 
+        aSpecInL = ainL
+        aSpecInR = ainR
+        aGrainInL = ainL
+        aGrainInR = ainR
+    elseif kroute == 2 then
+        aSpecInL = ainL
+        aSpecInR = ainR
+        aGrainInL = aSpecL
+        aGrainInR = aSpecR
+    elseif kroute == 3 then
+        aSpecInL = aGrainL
+        aSpecInR = aGrainR
+    endif
+    xout aSpecInL, aSpecInL, aGrainInL, aGrainInR 
 endop
 
 //# MODROUTER
@@ -421,6 +449,7 @@ endin
    
 instr 2
 kdx init 0
+aSpecInL, aSpecInR, aGrainInL, aGrainInR init 0
 ioverlap = gifftsize*0.25
 iwinsize = gifftsize*2
 imaxlen = 5 ;max length of delay buffer
@@ -566,6 +595,7 @@ aSpecmixL = aSpectralOutL*chnget:k("SpectralMix")
 aSpecmixR = aSpectralOutR*chnget:k("SpectralMix")         
 aInputMixL = ainL*chnget:k("InputMix")
 aInputMixR = ainR*chnget:k("InputMix")
+aSpecInL, aSpecInR, aGrainInL, aGrainInR audioRoute ainL, ainR, aSpecmixL, aSpecmixR, agrainmixL, agrainmixR, chnget:k("routingMatrix")
 amixL = agrainmixL+aSpecmixL+aInputMixL
 amixR = agrainmixR+aSpecmixR+aInputMixR
 

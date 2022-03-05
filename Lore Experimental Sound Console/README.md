@@ -1,7 +1,7 @@
 # Lore
 Puremagnetik Lore
 
-![Image of Lore](https://github.com/micah-frank-studio/Lore/blob/main/Lore%20Experimental%20Sound%20Console/Lore_StudioShot.jpg)
+![Image of Lore](https://github.com/micah-frank-studio/Lore/blob/main/Lore%20Experimental%20Sound%20Console/Lore_LP1.jpg)
 
 An Open-Source Advanced Sound Design Workstation.
 
