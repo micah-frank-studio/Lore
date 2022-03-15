@@ -1,13 +1,15 @@
 <Cabbage>
-// LORE Experimental Sound Console
-; Written by Micah Frank
+; LORE Experimental Sound Console
+; Written by Micah Frank (http://micahfrank.com)
 ; Puremagnetik » Brooklyn, NYC 2022
-; Special thanks to Rory Walsh (https://cabbageaudio.com/)
+; Special thanks to Rory Walsh for support and code (https://cabbageaudio.com/)
 
-;Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
-;Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-;NonCommercial — You may not use the material for commercial purposes.
-;No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+; Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+; Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+; NonCommercial — You may not use the material for commercial purposes.
+; No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+
+; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
 form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), typeface("includes/Inconsolata-Regular.ttf"), opcodeDir("."), bundle("./includes")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
@@ -17,20 +19,22 @@ image bounds(0,0,970,1000) file("includes/lore-bg.png")
 
 image bounds(20,100,400,75), channel("DelMatrixL"), colour(8,79,200,0)
 image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0)
-image bounds(20,100,400,75), channel("FBMatrixL"), colour(245,235,193,0)
+image bounds(20,100,400,75), channel("FBMatrixL"), colour(245,80,80,0)
 image bounds(440,100,400,75), channel("FBMatrixR"), colour(185,31,88,0)
 image bounds(20,100,400,75), channel("attenMatrixL"), colour(200,200,0,0)
 image bounds(440,100,400,75), channel("attenMatrixR"), colour(100,100,200,0)
 
 label bounds(3000,23,200,15), fontColour(200,200,200), fontSize(12), text(""), channel("SliderValue"), colour(0,0,0,0)
 
-label bounds(240,23,200,15), fontColour(200,200,200), text("SET A SAMPLE FIRST --->"), alpha(0), channel("SampleWarning")
+label bounds(240,23,200,15), fontColour(200,200,200), text("SET A SOURCE FILE --->"), alpha(0), channel("SampleWarning")
 
 groupbox bounds(440,0,400,70), colour(0,0,0,0), lineThickness(0),outlineThickness(0){
+
+button bounds(0, 20, 20, 20), latched(1), channel("InputMode"), text("F", "I") $BUTTON1, automatable(0)
+filebutton bounds (25, 20, 100, 20), populate("*.wav *.aif", "."), mode("file"), channel("File"), text("SOURCE") $BUTTON1, automatable(0)
+button bounds(130, 20, 60, 20), latched(1), channel("PlayMode"), text("PLAY", "PLAY") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0)
 button bounds(3000, 20, 60, 20), latched(0), channel("StopMode"), text("STOP") $BUTTON1 outlineColour(185,31,88), fontColour:0(250,250,250), fontColour:1(250,250,250), automatable(0)
-filebutton bounds(180, 20, 60, 20), latched(0), mode("save"), text("RENDER"), channel("RecordMode"), colour(0,0,0,0) $BUTTON1, automatable(0)
-filebutton bounds (0, 20, 100, 20), populate("*.wav *.aif", "."), mode("file"), channel("File"), text("SOURCE") $BUTTON1, automatable(0)
-button bounds(110, 20, 60, 20), latched(1), channel("PlayMode"), text("PLAY", "PLAY") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0)
+filebutton bounds(195, 20, 60, 20), latched(0), mode("save"), text("RENDER"), populate("*.wav", "."), channel("RecordMode"), colour(0,0,0,0) $BUTTON1, automatable(0)
 hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN"), $SLIDER1
 
 }
@@ -45,18 +49,22 @@ groupbox bounds(16,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickn
 }
 groupbox bounds(437,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
     label bounds(5,0,400,16), align("left"), text("ROUTING -----------------------------------------------"), fontSize(15) 
-    ;hslider bounds(0,30, 200, 20), channel("SpectralModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
-    ;hslider bounds(0,55, 200, 20), channel("SpectralModAmount1"), range(0,1,0.2,1), text ("AMOUNT") $SLIDER1
-    ;combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1")
-    combobox bounds(0, 30, 100, 20), items("PARALLEL","SPEC > GRAIN","GRAIN > SPEC"), channel("audioRouting"), automatable(0)
+    label bounds(3,30,400,16), align("left"), text("MODULE CHAIN"), fontSize(12) 
+    combobox bounds(0, 50, 100, 20), items("Parallel","Spec > Grain","Grain > Spec"), channel("audioRouting"), automatable(0)
+    label bounds(110,30,400,16), align("left"), text("REVERB TYPE"), fontSize(12) 
+    combobox bounds(107, 50, 100, 20), items("Algorithmic","Convolution"), channel("ReverbType"), automatable(0)
+    
+    label bounds(214,30,400,16), channel("impulsesLabel"), align("left"), text("IMPULSES"), fontSize(12), alpha(0.5)
+    combobox bounds(214, 50, 140, 20), populate("*.wav", "./includes/IRs"), channel("IR")
+
 
 }
 
 groupbox bounds(225,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
     hslider bounds(0,30, 200, 20), channel("SpectralModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
-    hslider bounds(0,55, 200, 20), channel("SpectralModAmount2"), range(0,1,0.2,1), text ("AMOUNT") $SLIDER1
-    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2")
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2")
+    hslider bounds(0,55, 200, 20), channel("SpectralModAmount2"), range(0,1,0.5,1), text ("AMOUNT") $SLIDER1
+    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2"), value(2)
+    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2"), value(6)
 
 }
 
@@ -74,8 +82,8 @@ groupbox bounds(16,450,855,200), colour(0,0,0,0), lineThickness(0),outlineThickn
 label bounds(5,0,400,16), align("left"), text("GRANULAR CONTROLS --------------------------------------"), fontSize(15) 
 hslider bounds(0, 30, 200, 20), channel("Pitch1"), text("PITCH"), range(-2, 2, 1, 1, 0.0)  $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("Stretch1"), text("STRETCH"), range(0.01, 2, 0.287, 1, 0.001) $SLIDER1
-hslider bounds(210, 30, 200, 20), channel("Density1"), text("DENSITY"), range(2, 12, 8, 1, 0.001) $SLIDER1
-hslider bounds(210, 55, 200, 20), channel("Size1"), text("SIZE"), range(0.01, 3, 0.43, 1, 0.001) $SLIDER1
+hslider bounds(210, 30, 200, 20), channel("Density1"), text("DENSITY"), range(2, 20, 8, 1, 0.001) $SLIDER1
+hslider bounds(210, 55, 200, 20), channel("Size1"), text("SIZE"), range(0.01, 1, 0.43, 0.5, 0.001) $SLIDER1
 hslider bounds(420, 30, 200, 20), channel("Start"), text("START"), range(0, 1, 0, 1, 0.001) $SLIDER1 
 hslider bounds(420, 55, 200, 20), channel("End"), text("END"), range(0, 1, 1, 1, 0.001) $SLIDER1 
 hslider bounds(630, 30, 200, 20), channel("Filter1"), text("FREQ"), range(10, 9000, 4000, 0.5, 0.001) $SLIDER1 
@@ -85,19 +93,19 @@ combobox bounds(633, 55, 70, 20), channel("Type1"), items("LPF", "HPF")
 
 
 groupbox bounds(16,545,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS  ---------------------------------"), fontSize(15) 
+label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS ----------------------------------"), fontSize(15) 
     hslider bounds(0,30, 200, 20), channel("GrainModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
-    hslider bounds(0,55, 200, 20), channel("GrainModAmount1"), range(0,1,0,1,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1")
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape1")
+    hslider bounds(0,55, 200, 20), channel("GrainModAmount1"), range(0,1,0.3,1,0.001), text ("AMOUNT") $SLIDER1
+    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1"), value(3)
+    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape1"), value(2)
 
 }
 
 groupbox bounds(225,545,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
     hslider bounds(0,30, 200, 20), channel("GrainModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
-    hslider bounds(0,55, 200, 20), channel("GrainModAmount2"), range(0,1,0,1,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2")
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2")
+    hslider bounds(0,55, 200, 20), channel("GrainModAmount2"), range(0,1,0,1,0.001), text ("AMOUNT"), value(0.3), $SLIDER1
+    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2"), value(2)
+    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2"), value(6)
 
 }
 
@@ -135,25 +143,35 @@ gibinpts = 513
 gibands = 64
 gidefaultVal = 0.7
 
+#include "includes/ImpulseTables.orc" 
+
+massign 0, 0
+
+// # TABLE ALLOCATIONS
 giEmptyGrid ftgen 97, 0, gibands, 7, gibands
 
 gimaskL ftgen 98, 0, gibinpts, -2, 0
 gimaskR ftgen 99, 0, gibinpts, -2, 0
-gigraphL ftgen 101, 0, gibands, -7, gidefaultVal*0.7, gibands/2, gidefaultVal*0.3, gibands/2, gidefaultVal*0.7
-gigraphR ftgen 102, 0, gibands, -7, gidefaultVal*0.7, gibands/2, gidefaultVal*0.3, gibands/2, gidefaultVal*0.7
+gigraphL ftgen 101, 0, gibands, -7, gidefaultVal*0.7, gibands/2, gidefaultVal*0.4, gibands/2, gidefaultVal*0.3
+gigraphR ftgen 102, 0, gibands, -7, gidefaultVal*0.7, gibands/2, gidefaultVal*0.3, gibands/2, gidefaultVal*0.3
 
-giDelTableL ftgen 103, 0, gibands, -7, gidefaultVal*0.7, gibands/4, gidefaultVal*0.3, gibands/4, gidefaultVal*0.5, gibands/4, gidefaultVal*0.3, gibands/4, gidefaultVal*0.5
+giDelTableL ftgen 103, 0, gibands, -7, gidefaultVal*0.5, gibands/4, gidefaultVal*0.8, gibands/4, gidefaultVal*0.5, gibands/4, gidefaultVal*0.3, gibands/4, gidefaultVal*0.5
 gidelL ftgen 104, 0, 1024, -2, 0
 giDelTableR ftgen 105, 0, gibands, -7, gidefaultVal*0.3, gibands/4, gidefaultVal*0.7, gibands/4, gidefaultVal*0.5, gibands/4, gidefaultVal*0.7, gibands/4, gidefaultVal*0.5
 gidelR ftgen 106, 0, 1024, -2, 0
 
 giFBTableL ftgen 107, 0, gibands, -7, gidefaultVal*0.2, gibands/2, gidefaultVal*0.4, gibands/2, gidefaultVal
 gifbL ftgen 108, 0, 1024, -2, 0
-giFBTableR ftgen 109, 0, gibands, -7, gidefaultVal*0.5, gibands/2, gidefaultVal*0.2, gibands/2, gidefaultVal
+giFBTableR ftgen 109, 0, gibands, -7, gidefaultVal*0.5, gibands/2, gidefaultVal*0.6, gibands/2, gidefaultVal
 gifbR ftgen 110, 0, 1024, -2, 0
 
 gimask ftgen 111, 0, gibands, -2, 0
 giwin ftgen 1, 0, 8192, 20, 2, 1  ;Hanning window
+
+giRecBuf1L ftgen	0,0,262144,2,0 ; circular buffer for live input
+giRecBuf1R ftgen	0,0,262144,2,0
+
+gisr = sr
 
 opcode updateTable, 0, kS
     kTable, SVGChannel xin
@@ -186,8 +204,9 @@ opcode mouseListen, 0, iS
     SWidget, kTrigWidgetChange cabbageGet "CURRENT_WIDGET" 
     itableRight = iTableBounds[0] + iTableBounds[2]
     if strcmpk(SWidget, SVGChannel) == 0 && kMouseDown == 1 && kMouseX > iTableBounds[0] && kMouseX < itableRight then
-        kYAmp = 1 - int(((kMouseY-iTableBounds[1])/iTableBounds[3])*10 + .5) / 10
-        kXIndex = int(((kMouseX-iTableBounds[0]) / iTableBounds[2])*iLength)
+        kYAmp = 1 - int(((kMouseY-iTableBounds[1])/iTableBounds[3])*10)/ 10
+        printk2 kYAmp
+        kXIndex = int(((kMouseX-iTableBounds[0]) / iTableBounds[2])*iLength) 
         tabw kYAmp, kXIndex, iTable
         if changed:k(kXIndex) == 1 then
             updateTable iTable, SVGChannel
@@ -203,14 +222,19 @@ opcode audioRoute, aaaa, aaaaaak
         aSpecInR = ainR
         aGrainInL = ainL
         aGrainInR = ainR
+        ;printks "Parallel\n", 2
     elseif kroute == 2 then
         aSpecInL = ainL
         aSpecInR = ainR
         aGrainInL = aSpecL
         aGrainInR = aSpecR
+        ;printks "Spec>Grain\n", 2
     elseif kroute == 3 then
+        aGrainInL = ainL
+        aGrainInR = ainR
         aSpecInL = aGrainL
         aSpecInR = aGrainR
+        ;printks "Spec>Grain\n", 2
     endif
     xout aSpecInL, aSpecInL, aGrainInL, aGrainInR 
 endop
@@ -294,6 +318,13 @@ opcode modroute, kkkkkkk, kkkkk
 
 endop
 
+
+opcode renderFile, 0, aaS
+    setksmps 1
+    ainL, ainR, Sfilename xin	
+    fout Sfilename, 18, ainL, ainR
+endop
+        
 instr 1
 kinitTables init 0
 cabbageSet "RecordMode", sprintf("populate(\"*\", \"%s\")", chnget:S("USER_HOME_DIRECTORY"))
@@ -327,18 +358,31 @@ if changed(gSFile) > 0 then
         cabbageSet 1, "File", SMessage
 endif 
 
-ki2 active 2
-if ki2 > 0 && chnget:k("PlayMode") < 1 then; if instr 2 is running and stop mode is activated, turnoff 2
-    turnoff2 2, 0, 0
-endif   
-if strlenk(gSFile) > 1 && ki2 < 1 && chnget:k("PlayMode") > 0 then ;if a file is loaded and play mode is activated
-    event "i", 2, 0, 500000 
-    cabbageSet metro(20), "SampleWarning", "alpha", "0"    
-elseif strlenk(gSFile) < 1 && ki2 < 1 && chnget:k("PlayMode") > 0 then ;if no sample is loaded show warning
-    cabbageSetValue "PlayMode", 0, metro(20)
-    cabbageSet metro(20), "SampleWarning", "alpha", "1"
-endif 
- 
+// play logic, is sample loaded? is it in live or file input etc....
+
+kinputmode, kinputChange cabbageGet "InputMode"
+    
+if kinputmode < 1 then ; if file input is selected
+    cabbageSet kinputChange, "File", sprintfk("active(%i), alpha(1)", 1)
+    cabbageSet kinputChange, "PlayMode", sprintfk("active(%i), alpha(1)", 1)
+    ki2 active 2 
+    if ki2 > 0 && chnget:k("PlayMode") < 1 then; turn off running instance of 2
+        turnoff2 2, 0, 0
+    endif 
+    if strlenk(gSFile) > 1 && ki2 < 1 && chnget:k("PlayMode") > 0  then ;if a file is loaded and play mode is activated
+        event "i", 2, 0, 500000 
+        cabbageSet metro(20), "SampleWarning", "alpha", "0" 
+    elseif strlenk(gSFile) < 1 && ki2 < 1 && chnget:k("PlayMode") > 0 then ;if no sample is loaded
+        cabbageSetValue "PlayMode", 0, metro(20)
+        cabbageSet metro(20), "SampleWarning", "alpha", "1"
+    endif   
+elseif kinputmode > 0 && kinputChange > 0 then
+    event "i", 2, 0, 500000  ; run intr 2 for live input
+    cabbageSet kinputChange, "File", sprintfk("active(%i), alpha(0.5)", 0)
+    cabbageSet kinputChange, "PlayMode", sprintfk("active(%i), alpha(0.5)", 0)
+    cabbageSet kinputChange, "SampleWarning", "alpha", "0"
+endif
+
 mouseListen 101, "attenMatrixL"
 mouseListen 102, "attenMatrixR"
 mouseListen 103, "DelMatrixL"
@@ -352,12 +396,12 @@ if changed(chnget:k("Random")) > 0 then
     krandcnt = 0
     loadRandVals:
     if krandcnt < gibands then
-        kval101 = abs(rand(1,0))
-        kval102 = abs(rand(1,1))
-        kval103 = abs(rand(1,2))
-        kval105 = abs(rand(1,3))
-        kval107 = abs(rand(1,4))
-        kval109 = abs(rand(1,0.5))
+        kval101 = abs(rand(0.9,0))
+        kval102 = abs(rand(0.9,1))
+        kval103 = abs(rand(0.9,5))
+        kval105 = abs(rand(0.9,3))
+        kval107 = abs(rand(0.9,4))
+        kval109 = abs(rand(0.9,0.5))
         tabw kval101, krandcnt, 101
         tabw kval102, krandcnt, 102
         tabw kval103, krandcnt, 103
@@ -423,13 +467,13 @@ gkStopButton, kTrigStop cabbageGetValue "StopMode"
     krecordIsOn active 100
     if kTrigStop > 0 then
     turnoff2 100, 0, 0
-    cabbageSet kTrigStop, "RecordMode", sprintfk("bounds(%i, 20, 60, 20)", 180)
+    cabbageSet kTrigStop, "RecordMode", sprintfk("bounds(%i, 20, 60, 20)", 195)
     cabbageSet kTrigStop, "StopMode", sprintfk("bounds(%i, 20, 60, 20)", 3000)
     cabbageSetValue "StopMode", 0, kTrigStop
     endif
  
     cabbageSet kTrigRecord, "RecordMode", sprintf("bounds(%i, 20, 60, 20)", 3000)
-    cabbageSet kTrigRecord, "StopMode", sprintf("bounds(%i, 20, 60, 20)", 180)
+    cabbageSet kTrigRecord, "StopMode", sprintf("bounds(%i, 20, 60, 20)", 195)
 
 //# Widget value text
     kMouseX chnget "MOUSE_X"
@@ -444,6 +488,26 @@ gkStopButton, kTrigStop cabbageGetValue "StopMode"
     else
     cabbageSet metro(0.7), "SliderValue", sprintfk{{ bounds(%d, %d, 100, 20) text(%s) visible(0) }}, 3000, kMouseY-30, SnewText)
     endif
+
+//# IR Management  
+ 
+    kverbtype, kverbchanged cabbageGetValue "ReverbType"
+    kImpulseNum, kImpulseChanged cabbageGet "IR"
+    kImpulseTable = 200+kImpulseNum
+
+    if kverbtype == 1 then
+        cabbageSet kverbchanged, "IR", sprintfk("active(%i), alpha(0.5)", 0)
+        cabbageSet kverbchanged, "impulsesLabel", sprintfk("active(%i), alpha(0.5)", 0)
+    else 
+        cabbageSet kverbchanged, "IR", sprintfk("active(%i), alpha(1)", 1)
+        cabbageSet kverbchanged, "impulsesLabel", sprintfk("active(%i), alpha(1)", 1)        
+    endif
+    
+    if kImpulseChanged > 0 || kverbchanged > 0 then
+        turnoff2 98, 0, 0
+        event "i", 98, 0, 500000, kverbtype, kImpulseTable
+    endif
+    
 endin
 
    
@@ -454,20 +518,39 @@ ioverlap = gifftsize*0.25
 iwinsize = gifftsize*2
 imaxlen = 5 ;max length of delay buffer
 
-iNChns  filenchnls  gSFile
-    if iNChns==2 then
-        ainL, ainR diskin gSFile,1,0,1
-        iL ftgen 0, 0, 0, 1, gSFile, 0, 0, 1
-		iR ftgen 0, 0, 0, 1, gSFile, 0, 0, 2
-    else
-        ainL diskin gSFile,1,0,1
-        ainR diskin gSFile,1,0,1
-        iL ftgen 0, 0, 0, 1, gSFile, 0, 0, 1
-		iR ftgen 0, 0, 0, 1, gSFile, 0, 0, 1
-    endif
+aInputL inch 1
+aInputR inch 2
 
-fftinL  pvsanal   ainL*chnget:k("Gain"), gifftsize, ioverlap, iwinsize, 1
-fftinR  pvsanal   ainR*chnget:k("Gain"), gifftsize, ioverlap, iwinsize, 1
+        if strlen(gSFile) > 0 then  
+        iNChns  filenchnls  gSFile
+        if iNChns==2 then
+            aDiskL, aDiskR diskin gSFile,1,0,1
+        else
+            aDiskL diskin gSFile,1,0,1
+            aDiskR diskin gSFile,1,0,1
+        endif
+        endif
+
+if chnget:k("InputMode") < 1 then ;if disk stream mode
+    ainputL = aDiskL
+    ainputR = aDiskR
+else 
+    ainputL = aInputL*chnget:k("Gain")
+    ainputR = aInputR*chnget:k("Gain")
+endif
+
+ainL = ainputL*chnget:k("Gain")
+ainR = ainputR*chnget:k("Gain")
+
+;Write input to buffer
+    itablelength = ftlen(giRecBuf1L)
+	    kndx = (1/(itablelength/gisr)) ;speed calculation for phasor
+	    andx phasor kndx
+	    tablew   aGrainInL, andx, giRecBuf1L,1 ; write audio to buffer
+ 	    tablew   aGrainInR, andx, giRecBuf1R,1 
+  
+fftinL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 1
+fftinR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 1
 
 //# SPECTRAL MODULATION
     kshape1_Spectral chnget "SpectralLFOShape1" 
@@ -513,6 +596,7 @@ fdelmaskL pvsinit gifftsize
 kAttenModSumL = limit(kattenmod1L+kattenmod2L, 0, 1) ; sum both mod signals and limit to acceptable range
 fmaskL pvsmaska fftinL, gimaskL, 1-kAttenModSumL
 //Left Delay Line and Buffer
+
 ffbL pvsmix fmaskL, fdelmaskL ; mix feedback mask back into buffer
 ibufL, kwriteTimeL pvsbuffer ffbL, imaxlen
 fdelL pvsbufread2 kwriteTimeL, ibufL, gidelL, gidelL ;ift 1 & 2 at least n/2 + 1 positions long. n= # bins
@@ -537,9 +621,9 @@ afftOutR = aSpectralOutR
 dispfft afftOutL, 0.1, 2048, 0, 1
 dispfft afftOutR, 0.1, 2048, 0, 1
 
-//# GRANULAR MODULATION
+//# GRANULAR SECTION
 
-  klev1 = 0.5*chnget:k("Gain") ;chnget "Volume1"
+  klev1 = 0.5 ;*chnget:k("Gain") ;chnget "Volume1"
   kdens1 chnget "Density1"
   kgrsize1 chnget "Size1"
   kpitch1 chnget "Pitch1"
@@ -559,9 +643,9 @@ dispfft afftOutR, 0.1, 2048, 0, 1
   kmodRate2_Grain = chnget:k("GrainModRate2")
       kPitchMod1, kStretchMod1, kDensityMod1, kSizeMod1, kStartMod1, kEndMod1, kFilterMod1 modroute kmodAmt1_Grain, kmodRate1_Grain, kmodDest1_Grain, kshape1_Grain, 2
       kPitchMod2, kStretchMod2, kDensityMod2, kSizeMod2, kStartMod2, kEndMod2, kFilterMod2 modroute kmodAmt2_Grain, kmodRate2_Grain, kmodDest2_Grain, kshape2_Grain, 2
-        isr = sr
-        iolaps  = 2
+        iolaps  = 2 ; must be no more thn max(kfreq)*max(kgrsize)
 	    ips     = 1/iolaps
+	    iTableLenInSeconds = itablelength/gisr
 	    // Scale and sum mods 1 and 2 if they happen to be routed to same destination
 	    kdensSum = limit(kDensityMod1+kDensityMod2, 0, 1)
 	    kpitchSum = limit(kPitchMod1+kPitchMod2, 0, 1)
@@ -576,12 +660,18 @@ dispfft afftOutR, 0.1, 2048, 0, 1
 	    kstart1 = kstart1-(kstart1*kstartSum)
 	    kend1 = kend1-(kend1*kendSum)
 	    kfilt1 = kfilt1-(kfilt1*kfilterSum)
-	    ilen = ftlen(iL)/isr
-        a1L syncloop klev1, kdens1, kpitch1, kgrsize1, ips*kstr1, kstart1, ilen*kend1, iL, giwin, iolaps
-		a1R syncloop klev1, kdens1, kpitch1, kgrsize1, ips*kstr1, kstart1, ilen*kend1, iR, giwin, iolaps
+	    kendInSec = iTableLenInSeconds*kend1
+	    kstartInSec = iTableLenInSeconds*kstart1
+	    kendInSec_ = kendInSec < kstartInSec+0.1 ? kstartInSec+0.1 : kendInSec ;keep kstart and kend from overtaking each other
+	    kstartInSec_ = kstartInSec > kendInSec-0.1 ? kendInSec-0.1 : kstartInSec
+        a1L syncloop klev1, kdens1, kpitch1, kgrsize1, ips*kstr1, kstartInSec_, kendInSec_, giRecBuf1L, giwin, iolaps
+		a1R syncloop klev1, kdens1, kpitch1, kgrsize1, ips*kstr1, kstartInSec_, kendInSec_, giRecBuf1R, giwin, iolaps
+		kseglenInHz = 1/(kendInSec_ - kstartInSec_)
+	    kfade loopseg kseglenInHz, 0, 0, 0, 0.2, 1, 0.6, 1, 0.2 ; might need fade on table write?
+        print iTableLenInSeconds
         kq = 0
-  	    alow1L, ahigh1L, aband1L svfilter a1L, kfilt1, 1
-  	    alow1R, ahigh1R, aband1R svfilter a1R, kfilt1, 1
+  	    alow1L, ahigh1L, aband1L svfilter a1L*kfade, kfilt1, 1
+  	    alow1R, ahigh1R, aband1R svfilter a1R*kfade, kfilt1, 1
         
         if kfiltType1 == 1 then
             agrainmixL = alow1L * chnget:k("GrainMix")
@@ -595,25 +685,46 @@ aSpecmixL = aSpectralOutL*chnget:k("SpectralMix")
 aSpecmixR = aSpectralOutR*chnget:k("SpectralMix")         
 aInputMixL = ainL*chnget:k("InputMix")
 aInputMixR = ainR*chnget:k("InputMix")
-aSpecInL, aSpecInR, aGrainInL, aGrainInR audioRoute ainL, ainR, aSpecmixL, aSpecmixR, agrainmixL, agrainmixR, chnget:k("routingMatrix")
+aSpecInL, aSpecInR, aGrainInL, aGrainInR audioRoute ainL, ainR, aSpecmixL, aSpecmixR, agrainmixL, agrainmixR, chnget:k("audioRouting")
+
 amixL = agrainmixL+aSpecmixL+aInputMixL
 amixR = agrainmixR+aSpecmixR+aInputMixR
 
-
-chnmix amixL, "drymixL"
-chnmix amixR, "drymixR"
-chnset amixL*kverbsend1, "verbsendL"
-chnset amixR*kverbsend1, "verbsendR"
+amixL_limit = limit(amixL, -0.98, 0.98)
+amixR_limit = limit(amixR, -0.98, 0.98)
+chnmix amixL_limit, "drymixL"
+chnmix amixR_limit, "drymixR"
+chnset amixL_limit*kverbsend1, "verbsendL"
+chnset amixR_limit*kverbsend1, "verbsendR"
 
 endin
 
 instr reverb, 98
+ 
 ainL chnget "verbsendL"
 ainR chnget "verbsendR"
-kplaystate chnget "PlayMode" ; need kplaystate otherwise it feeds back? need to investigate...
-aRevL, aRevR reverbsc ainL*kplaystate, ainR*kplaystate, 0.9, 15000*(1-chnget:k("Damp"))
-chnset aRevL, "verbReturnL"
-chnset aRevR, "verbReturnR"
+iImpulseTable = p5 
+iverbType = p4  
+if iverbType == 1 then
+    aRevL, aRevR reverbsc ainL, ainR, 0.9, 15000 ;15000*(1-chnget:k("Damp"))
+else 
+    aRevcL ftconv ainL, iImpulseTable, 2048
+    aRevcR ftconv ainR, iImpulseTable, 2048 
+    aRevL = aRevcL*0.1 ; adjust gain of convol b/c it's loud
+    aRevR = aRevcR*0.1
+endif
+;rireturn
+;if kImpulseChanged > 0 then
+;    reinit loadImpulse
+;endif 
+
+aRevfL lpf18 aRevL, 15000*(1-chnget:k("Damp")), 0.01, 0
+aRevfR lpf18 aRevR, 15000*(1-chnget:k("Damp")), 0.01, 0
+
+chnset aRevfL, "verbReturnL"
+chnset aRevfR, "verbReturnR"
+chnclear "verbsendL"
+chnclear "verbsendR"
 endin
 
 instr mixer, 99
@@ -625,7 +736,23 @@ areverbL chnget "verbReturnL"
 areverbR chnget "verbReturnR"
 
 koutput chnget "Output"
-outs (adryL+areverbL)*koutput, (adryR+areverbR)*koutput
+
+amixL = (adryL+areverbL)*koutput
+amixR = (adryR+areverbR)*koutput
+chnset (adryL+areverbL)*koutput, "RecordBusL"
+chnset (adryR+areverbR)*koutput, "RecordBusR"
+outs amixL, amixR
+
+/* Render to opcode 
+gSSaveFile, kTrigRecord cabbageGetValue "RecordMode"
+krecordVal, krecordValTrig cabbageGetValue "RecordMode"
+
+    if krecordVal > 0 then
+       Sfilename strcatk  gSSaveFile, ".wav"
+       renderFile amixL, amixR, Sfilename 
+       printk2 krecordVal   
+    endif
+*/
 
 chnclear "drymixL"
 chnclear "drymixR"
@@ -638,9 +765,14 @@ instr 100 ;recorder
     
     prints "recording started\n"
 
-	amixL, amixR monitor
-    Sfilename strcat  gSSaveFile, ".wav"
-	fout Sfilename, 18, amixL, amixR
+	;amixL, amixR monitor
+	
+	amixL chnget "RecordBusL"
+    amixR chnget "RecordBusR"
+    
+    ;Sfilename strcat  gSSaveFile, ".wav"
+	;fout Sfilename, 18, amixL, amixR
+	renderFile amixL, amixR, gSSaveFile 
 
 endin
 
