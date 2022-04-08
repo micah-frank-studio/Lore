@@ -16,6 +16,7 @@ form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0")
 image bounds(0,0,970,1000) file("includes/lore-bg.png")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.13"), fontSize(11), align("left"), channel("VersionNumber")
 
 image bounds(20,100,400,75), channel("DelMatrixL"), colour(8,79,200,0)
 image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0)
@@ -39,14 +40,32 @@ hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN
 
 }
 
-groupbox bounds(16,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("SPECTRAL MODULATIONS ----------------------------------"), fontSize(15) 
+groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
+    label bounds(5,0,400,16), align("left"), text("SPECTRAL MODULATIONS -------------------------"), fontSize(15) 
+    button bounds(340, 0, 60, 18), latched(1), channel("SpectralModMode"), text("LFO","SPLINE"), $BUTTON1, automatable(0)
+    //Spectral LFO PANEL
+    groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("SpectralLFO"), visible(1) {
     hslider bounds(0,30, 200, 20), channel("SpectralModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
-    hslider bounds(0,55, 200, 20), channel("SpectralModAmount1"), range(0,1,0.2,1), text ("AMOUNT") $SLIDER1
-    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1")
+    hslider bounds(0,55, 200, 20), channel("SpectralModAmount1"), range(0,1,0.2,0.5,0.001), text ("AMOUNT") $SLIDER1
     combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape1")
+    hslider bounds(210,30, 200, 20), channel("SpectralModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
+    hslider bounds(210,55, 200, 20), channel("SpectralModAmount2"), range(0,1,0.2,0.5,0.001), text ("AMOUNT") $SLIDER1
+    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2"), value(6)
+   
+    }
+    //Spectral Spline Panel
+    groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100) channel("SpectralSpline"), visible(0){
+    hslider bounds(0,30, 200, 20), channel("SpectralSplineRange1"), range(0,1,0.6,0.5,0.001), text ("RANGE") $SLIDER1
+    hslider bounds(0,55, 200, 20), channel("SpectralSplineSpeed1"), range(0,10,1,0.5,0.001), text ("SPEED") $SLIDER1
+    hslider bounds(210,30, 200, 20), channel("SpectralSplineRange2"), range(0,1,0.2,0.5,0.001), text ("RANGE") $SLIDER1
+    hslider bounds(210,55, 200, 20), channel("SpectralSplineSpeed2"), range(0,10,3,0.5,0.001), text ("SPEED") $SLIDER1
+    }
+    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1")
+    combobox bounds(210, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2"), value(2)
 
 }
+
+
 groupbox bounds(437,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
     label bounds(5,0,400,16), align("left"), text("ROUTING -----------------------------------------------"), fontSize(15) 
     label bounds(3,30,400,16), align("left"), text("MODULE CHAIN"), fontSize(12) 
@@ -60,13 +79,7 @@ groupbox bounds(437,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThick
 
 }
 
-groupbox bounds(225,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    hslider bounds(0,30, 200, 20), channel("SpectralModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
-    hslider bounds(0,55, 200, 20), channel("SpectralModAmount2"), range(0,1,0.5,1), text ("AMOUNT") $SLIDER1
-    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2"), value(2)
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2"), value(6)
 
-}
 
 button bounds(355, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), $BUTTON1, automatable(0)
 
@@ -92,22 +105,30 @@ combobox bounds(633, 55, 70, 20), channel("Type1"), items("LPF", "HPF")
 
 
 
-groupbox bounds(16,545,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS ----------------------------------"), fontSize(15) 
+groupbox bounds(16,545,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
+    label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS -------------------------"), fontSize(15) 
+     button bounds(340, 0, 60, 18), latched(1), channel("GranularModMode"), text("LFO","SPLINE"), $BUTTON1, automatable(0)
+    //Granular LFO PANEL
+    groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("GranularLFO"), visible(1) {
     hslider bounds(0,30, 200, 20), channel("GrainModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(0,55, 200, 20), channel("GrainModAmount1"), range(0,1,0.3,1,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1"), value(3)
     combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape1"), value(2)
+    hslider bounds(210,30, 200, 20), channel("GrainModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
+    hslider bounds(210,55, 200, 20), channel("GrainModAmount2"), range(0,1,0,1,0.001), text ("AMOUNT"), value(0.3), $SLIDER1
+    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2"), value(6)   
+        }
+    // Granular Spline Panel
+    groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("GranularSpline"), visible(0) {
+    hslider bounds(0,30, 200, 20), channel("GranularSplineRange1"), range(0,1,0.3,1,0.001), text ("RANGE") $SLIDER1
+    hslider bounds(0,55, 200, 20), channel("GranularSplineSpeed1"), range(0,10,1,0.5,0.001), text ("SPEED") $SLIDER1
+    hslider bounds(210,30, 200, 20), channel("GranularSplineRange2"), range(0,1,0.1,1,0.001), text ("RANGE") $SLIDER1
+    hslider bounds(210,55, 200, 20), channel("GranularSplineSpeed2"), range(0,10,3,0.5,0.001), text ("SPEED") $SLIDER1
+    }
+    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1"), value(3)
+    combobox bounds(210, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2"), value(2)
 
 }
 
-groupbox bounds(225,545,400,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    hslider bounds(0,30, 200, 20), channel("GrainModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
-    hslider bounds(0,55, 200, 20), channel("GrainModAmount2"), range(0,1,0,1,0.001), text ("AMOUNT"), value(0.3), $SLIDER1
-    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2"), value(2)
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2"), value(6)
-
-}
 
 //# MIXER CONTROLS
 groupbox bounds(437,545,500,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
@@ -205,7 +226,6 @@ opcode mouseListen, 0, iS
     itableRight = iTableBounds[0] + iTableBounds[2]
     if strcmpk(SWidget, SVGChannel) == 0 && kMouseDown == 1 && kMouseX > iTableBounds[0] && kMouseX < itableRight then
         kYAmp = 1 - int(((kMouseY-iTableBounds[1])/iTableBounds[3])*10)/ 10
-        printk2 kYAmp
         kXIndex = int(((kMouseX-iTableBounds[0]) / iTableBounds[2])*iLength) 
         tabw kYAmp, kXIndex, iTable
         if changed:k(kXIndex) == 1 then
@@ -240,19 +260,23 @@ opcode audioRoute, aaaa, aaaaaak
 endop
 
 //# MODROUTER
-opcode modroute, kkkkkkk, kkkkk
-    kmodAmt, kmodRate, kmodDest, kshape, kmethod xin ; kmethod, which routing matrix is it? 1 = spectral, 2 = granular
+opcode modroute, kkkkkkk, kkkkkk
+    kmodAmt, kmodRate, kmodDest, kshape, kmethod, kspline xin ; kmethod, which routing matrix is it? 1 = spectral, 2 = granular
     kout1, kout2, kout3, kout4, kout5, kout6, kout7 init 0
-    if kshape == 1 then 
-       klfo = abs(lfo(kmodAmt, kmodRate, 0)) ; sine
-    elseif kshape == 2 then 
-        klfo = abs(lfo(kmodAmt, kmodRate, 1)) ; triangle
-    elseif kshape == 3 then 
-        klfo = abs(lfo(kmodAmt, kmodRate, 3)) ; square
-    elseif kshape == 4 then 
-        klfo = abs(lfo(kmodAmt, kmodRate, 5)) ; saw up
-    elseif kshape == 5 then 
-        klfo = abs(lfo(kmodAmt, kmodRate, 4)) ; saw down
+    if kspline < 1 then ; if LFO mode is chosen
+        if kshape == 1 then 
+            klfo = abs(lfo(kmodAmt, kmodRate, 0)) ; sine
+        elseif kshape == 2 then 
+            klfo = abs(lfo(kmodAmt, kmodRate, 1)) ; triangle
+        elseif kshape == 3 then 
+            klfo = abs(lfo(kmodAmt, kmodRate, 3)) ; square
+        elseif kshape == 4 then 
+            klfo = abs(lfo(kmodAmt, kmodRate, 5)) ; saw up
+        elseif kshape == 5 then 
+            klfo = abs(lfo(kmodAmt, kmodRate, 4)) ; saw down
+    else ; if spline curve is chosen
+        klfo = kmodAmt
+    endif
     endif
     if  kshape == 6 then ; if random lfo is chosen       
         ksampHold = abs(randh(kmodAmt, kmodRate))
@@ -340,22 +364,29 @@ if kinitTables < 1 then
 endif
  
 
-gSFile=chnget:S("File")
-gSDroppedSFile, kDroppedTrig cabbageGet "LAST_FILE_DROPPED"
+;gSFile=chnget:S("File")
+SDroppedFile, kDroppedTrig cabbageGet "LAST_FILE_DROPPED"
+SBrowsedFile, kBrowsedTrig cabbageGet "File"
+
 if kDroppedTrig == 1 then
-   ;gSFile sprintfk "%s", gSDroppedSFile
-   cabbageSetValue "File", gSDroppedSFile, kDroppedTrig
-   ;cabbageSet 1, "File", gSDroppedSFile
+    gSFile strcpyk SDroppedFile
+endif
+if kBrowsedTrig == 1 then
+    gSFile strcpyk SBrowsedFile
 endif
 
 
-if changed(gSFile) > 0 then 
+kvalo init 0
+if changed(gSFile) == 1 then 
     turnoff2 2, 0, 0
         kpos  strrindexk gSFile, "/"  ;look for the rightmost '/'
         Snam   strsubk    gSFile, kpos+1, -1    ;extract the substring
         Snam   strsubk    Snam, 0, 12 ; truncate string to x characters so it fits in display
-        SMessage sprintfk "text(\"%s\") ", Snam
-        cabbageSet 1, "File", SMessage
+        gSMessage sprintfk "text(\"%s\") ", Snam
+        cabbageSet 1, "File", gSMessage
+        ;event "i", 50, 0, 1
+       kvalo +=1
+        printks2 "kvalo=%i\n", kvalo
 endif 
 
 // play logic, is sample loaded? is it in live or file input etc....
@@ -507,7 +538,14 @@ gkStopButton, kTrigStop cabbageGetValue "StopMode"
         turnoff2 98, 0, 0
         event "i", 98, 0, 500000, kverbtype, kImpulseTable
     endif
+//# Modulation Windows  - toggle between LFO and Spline views
+    kspectralmodmode, kspecModModeChanged cabbageGet "SpectralModMode"
+    cabbageSet kspecModModeChanged, "SpectralLFO", sprintfk("visible(%i)", 1-kspectralmodmode)
+    cabbageSet kspecModModeChanged, "SpectralSpline", sprintfk("visible(%i)", kspectralmodmode)
     
+    kgranularmodmode, kgranModModeChanged cabbageGet "GranularModMode"
+    cabbageSet kgranModModeChanged, "GranularLFO", sprintfk("visible(%i)", 1-kgranularmodmode)
+    cabbageSet kgranModModeChanged, "GranularSpline", sprintfk("visible(%i)", kgranularmodmode)
 endin
 
    
@@ -553,16 +591,24 @@ fftinL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 1
 fftinR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 1
 
 //# SPECTRAL MODULATION
+    kSpectralSplineMode chnget "SpectralModMode"
     kshape1_Spectral chnget "SpectralLFOShape1" 
     kmodDest1_Spectral = chnget:k("SpectralLFODest1")
-    kmodAmt1_Spectral = chnget:k("SpectralModAmount1")
     kmodRate1_Spectral = chnget:k("SpectralModRate1")
     kshape2_Spectral chnget "SpectralLFOShape2"
     kmodDest2_Spectral = chnget:k("SpectralLFODest2")
-    kmodAmt2_Spectral = chnget:k("SpectralModAmount2")
     kmodRate2_Spectral = chnget:k("SpectralModRate2")
-    kattenmod1L, kdelmod1L, kfbmod1L, kattenmod1R, kdelmod1R, kfbmod1R, knothing modroute kmodAmt1_Spectral, kmodRate1_Spectral, kmodDest1_Spectral, kshape1_Spectral, 1
-    kattenmod2L, kdelmod2L, kfbmod2L, kattenmod2R, kdelmod2R, kfbmod2R, knothing modroute kmodAmt2_Spectral, kmodRate2_Spectral, kmodDest2_Spectral, kshape2_Spectral, 1
+    
+    if kSpectralSplineMode > 0 then
+        kmodAmt1_Spectral = rspline(0, chnget:k("SpectralSplineRange1"), 0.01, chnget:k("SpectralSplineSpeed1"))
+        kmodAmt2_Spectral = rspline(0, chnget:k("SpectralSplineRange2"), 0.01, chnget:k("SpectralSplineSpeed2"))
+    else 
+        kmodAmt1_Spectral = chnget:k("SpectralModAmount1")
+        kmodAmt2_Spectral = chnget:k("SpectralModAmount2")
+    endif
+    
+    kattenmod1L, kdelmod1L, kfbmod1L, kattenmod1R, kdelmod1R, kfbmod1R, knothing modroute kmodAmt1_Spectral, kmodRate1_Spectral, kmodDest1_Spectral, kshape1_Spectral, kSpectralSplineMode, 1
+    kattenmod2L, kdelmod2L, kfbmod2L, kattenmod2R, kdelmod2R, kfbmod2R, knothing modroute kmodAmt2_Spectral, kmodRate2_Spectral, kmodDest2_Spectral, kshape2_Spectral, kSpectralSplineMode, 1
     
 
 //copy tables to full res masks
@@ -621,7 +667,7 @@ afftOutR = aSpectralOutR
 dispfft afftOutL, 0.1, 2048, 0, 1
 dispfft afftOutR, 0.1, 2048, 0, 1
 
-//# GRANULAR SECTION
+
 
   klev1 = 0.5 ;*chnget:k("Gain") ;chnget "Volume1"
   kdens1 chnget "Density1"
@@ -633,16 +679,25 @@ dispfft afftOutR, 0.1, 2048, 0, 1
   kfiltType1 chnget "Type1"
   kfilt1 chnget "Filter1"
   kverbsend1 chnget "Space"
+//# GRANULAR MODULATION
+  kGranSplineMode chnget "GranularModMode"
   kshape1_Grain chnget "GrainLFOShape1" 
   kmodDest1_Grain = chnget:k("GrainLFODest1")
-  kmodAmt1_Grain = chnget:k("GrainModAmount1")
   kmodRate1_Grain = chnget:k("GrainModRate1")
   kshape2_Grain chnget "GrainLFOShape2"
   kmodDest2_Grain = chnget:k("GrainLFODest2")
-  kmodAmt2_Grain = chnget:k("GrainModAmount2")
   kmodRate2_Grain = chnget:k("GrainModRate2")
-      kPitchMod1, kStretchMod1, kDensityMod1, kSizeMod1, kStartMod1, kEndMod1, kFilterMod1 modroute kmodAmt1_Grain, kmodRate1_Grain, kmodDest1_Grain, kshape1_Grain, 2
-      kPitchMod2, kStretchMod2, kDensityMod2, kSizeMod2, kStartMod2, kEndMod2, kFilterMod2 modroute kmodAmt2_Grain, kmodRate2_Grain, kmodDest2_Grain, kshape2_Grain, 2
+  
+      if kGranSplineMode > 0 then
+        kmodAmt1_Grain = rspline(0, chnget:k("GranularSplineRange1"), 0.01, chnget:k("GranularSplineSpeed1"))
+        kmodAmt2_Grain = rspline(0, chnget:k("GranularSplineRange2"), 0.01, chnget:k("GranularSplineSpeed2"))
+    else 
+        kmodAmt1_Grain = chnget:k("GrainModAmount1")
+        kmodAmt2_Grain = chnget:k("GrainModAmount2")
+    endif
+    
+      kPitchMod1, kStretchMod1, kDensityMod1, kSizeMod1, kStartMod1, kEndMod1, kFilterMod1 modroute kmodAmt1_Grain, kmodRate1_Grain, kmodDest1_Grain, kshape1_Grain, kGranSplineMode, 2
+      kPitchMod2, kStretchMod2, kDensityMod2, kSizeMod2, kStartMod2, kEndMod2, kFilterMod2 modroute kmodAmt2_Grain, kmodRate2_Grain, kmodDest2_Grain, kshape2_Grain, kGranSplineMode, 2
         iolaps  = 2 ; must be no more thn max(kfreq)*max(kgrsize)
 	    ips     = 1/iolaps
 	    iTableLenInSeconds = itablelength/gisr
