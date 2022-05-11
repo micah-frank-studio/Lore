@@ -11,17 +11,18 @@
 
 ; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
+
 form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), typeface("includes/Inconsolata-Regular.ttf"), opcodeDir("."), bundle("./includes")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0")
 image bounds(0,0,970,1000) file("includes/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.13"), fontSize(11), align("left"), channel("VersionNumber")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.14"), fontSize(11), align("left"), channel("VersionNumber")
 
-image bounds(20,100,400,75), channel("DelMatrixL"), colour(8,79,200,0)
-image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0)
-image bounds(20,100,400,75), channel("FBMatrixL"), colour(245,80,80,0)
-image bounds(440,100,400,75), channel("FBMatrixR"), colour(185,31,88,0)
+image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
+image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0), alpha(0.5)
+image bounds(20,100,400,75), channel("FBMatrixL"), colour(245,80,80,0), alpha(0.5)
+image bounds(440,100,400,75), channel("FBMatrixR"), colour(185,31,88,0), alpha(0.5)
 image bounds(20,100,400,75), channel("attenMatrixL"), colour(200,200,0,0)
 image bounds(440,100,400,75), channel("attenMatrixR"), colour(100,100,200,0)
 
@@ -76,9 +77,7 @@ groupbox bounds(437,235,400,150), colour(0,0,0,0), lineThickness(0),outlineThick
     label bounds(214,30,400,16), channel("impulsesLabel"), align("left"), text("IMPULSES"), fontSize(12), alpha(0.5)
     combobox bounds(214, 50, 140, 20), populate("*.wav", "./includes/IRs"), channel("IR")
 
-
 }
-
 
 
 button bounds(355, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), $BUTTON1, automatable(0)
@@ -86,6 +85,10 @@ button bounds(355, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), $
 button bounds(775, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L") $BUTTON1, automatable(0)
 
 button bounds(100, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), $BUTTON1, automatable(0)
+;combobox bounds(168, 190, 70, 20), items("Hamming", "von Hamm", "Kaiser"), channel("WindowType"), automatable(0)
+combobox bounds(180, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0)
+;combobox bounds(308, 190, 40, 20), items("8","16","32","64"), channel("Resolution"), value(3), automatable(0)
+
 optionbutton bounds(20, 190, 60, 20), latched(1), channel("TimeFeedModeL"), items("FILTER", "TIME", "FBACK") $BUTTON1, automatable(0)
 optionbutton bounds(440, 190, 60, 20), latched(1), channel("TimeFeedModeR"), items("FILTER", "TIME", "FBACK") $BUTTON1, automatable(0)
 
@@ -154,14 +157,14 @@ signaldisplay bounds(440, 360, 400, 70), displayType("spectrogram"), backgroundC
 </CsOptions>
 <CsInstruments>
 ; Initialize the global variables. 
-ksmps = 64
+ksmps = 16
 nchnls = 2
 0dbfs = 1
 seed 0
 
 gifftsize = 1024
 gibinpts = 513
-gibands = 64
+gibands = gifftsize/16
 gidefaultVal = 0.7
 
 #include "includes/ImpulseTables.orc" 
@@ -170,7 +173,6 @@ massign 0, 0
 
 // # TABLE ALLOCATIONS
 giEmptyGrid ftgen 97, 0, gibands, 7, gibands
-
 gimaskL ftgen 98, 0, gibinpts, -2, 0
 gimaskR ftgen 99, 0, gibinpts, -2, 0
 gigraphL ftgen 101, 0, gibands, -7, gidefaultVal*0.7, gibands/2, gidefaultVal*0.4, gibands/2, gidefaultVal*0.3
@@ -186,7 +188,7 @@ gifbL ftgen 108, 0, 1024, -2, 0
 giFBTableR ftgen 109, 0, gibands, -7, gidefaultVal*0.5, gibands/2, gidefaultVal*0.6, gibands/2, gidefaultVal
 gifbR ftgen 110, 0, 1024, -2, 0
 
-gimask ftgen 111, 0, gibands, -2, 0
+;gimask ftgen 111, 0, gibands, -2, 0
 giwin ftgen 1, 0, 8192, 20, 2, 1  ;Hanning window
 
 giRecBuf1L ftgen	0,0,262144,2,0 ; circular buffer for live input
@@ -201,7 +203,7 @@ opcode updateTable, 0, kS
     kBounds[] cabbageGet SVGChannel, "bounds"
     kcolour[] cabbageGet SVGChannel, "colour"
     kLength = gibands
-    kRectWidth = 0.1 ;kBounds[2] / kLength
+    kRectWidth = kLength < 64 ? (kBounds[2] / kLength) : 0.1
     SPath init ""
    while kCnt < kLength do      
         kAmp = 1-table(kCnt, i(kTable))
@@ -224,12 +226,16 @@ opcode mouseListen, 0, iS
     kMouseDown chnget "MOUSE_DOWN_LEFT"
     SWidget, kTrigWidgetChange cabbageGet "CURRENT_WIDGET" 
     itableRight = iTableBounds[0] + iTableBounds[2]
+    ;itableTop = iTableBounds[1] + iTableBounds[3]
     if strcmpk(SWidget, SVGChannel) == 0 && kMouseDown == 1 && kMouseX > iTableBounds[0] && kMouseX < itableRight then
+        if kMouseY > iTableBounds[1] then ;&& kMouseY < itableTop then
         kYAmp = 1 - int(((kMouseY-iTableBounds[1])/iTableBounds[3])*10)/ 10
         kXIndex = int(((kMouseX-iTableBounds[0]) / iTableBounds[2])*iLength) 
         tabw kYAmp, kXIndex, iTable
-        if changed:k(kXIndex) == 1 then
-            updateTable iTable, SVGChannel
+        ;printk2 kYAmp
+            if changed:k(kXIndex) == 1 || changed:k(kYAmp) == 1 then
+                updateTable iTable, SVGChannel
+            endif
         endif
     endif
 endop
@@ -352,7 +358,7 @@ endop
 instr 1
 kinitTables init 0
 cabbageSet "RecordMode", sprintf("populate(\"*\", \"%s\")", chnget:S("USER_HOME_DIRECTORY"))
-
+        
 if kinitTables < 1 then
     updateTable 102, "attenMatrixR"
     updateTable 101, "attenMatrixL"
@@ -363,8 +369,6 @@ if kinitTables < 1 then
     kinitTables = 100
 endif
  
-
-;gSFile=chnget:S("File")
 SDroppedFile, kDroppedTrig cabbageGet "LAST_FILE_DROPPED"
 SBrowsedFile, kBrowsedTrig cabbageGet "File"
 
@@ -414,13 +418,15 @@ elseif kinputmode > 0 && kinputChange > 0 then
     cabbageSet kinputChange, "SampleWarning", "alpha", "0"
 endif
 
-mouseListen 101, "attenMatrixL"
-mouseListen 102, "attenMatrixR"
-mouseListen 103, "DelMatrixL"
-mouseListen 105, "DelMatrixR"
-mouseListen 107, "FBMatrixL"
-mouseListen 109, "FBMatrixR"
-
+/*if ki2 < 1 then ; enable mousing on graph when not playing just for UX ; this section needs some work as it's overriding the mouse behaviours
+    mouseListen 101, "attenMatrixL"
+    mouseListen 102, "attenMatrixR"
+    mouseListen 103, "DelMatrixL"
+    mouseListen 105, "DelMatrixR"
+    mouseListen 107, "FBMatrixL"
+    mouseListen 109, "FBMatrixR"
+endif
+*/
 //# RANDOM Function
 if changed(chnget:k("Random")) > 0 then
     if chnget:k("Random") > 0 then
@@ -453,24 +459,37 @@ endif
 
 kLModeVal, kLmode cabbageGet "TimeFeedModeL"
 if kLModeVal == 0 then
-    cabbageSet kLmode, "attenMatrixL", sprintfk("toFront(%i)", 1)
+    cabbageSet kLmode, "attenMatrixL", sprintfk("toFront(%i), alpha(%f)", 1, 1)
+    cabbageSet kLmode, "DelMatrixL", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kLmode, "FBMatrixL", sprintfk("alpha(%f)", 0.5)
 elseif kLModeVal == 1 then
-    cabbageSet kLmode, "DelMatrixL", sprintfk("toFront(%i)", 1)
+    cabbageSet kLmode, "DelMatrixL", sprintfk("toFront(%i), alpha(%f)", 1, 1)
+    cabbageSet kLmode, "attenMatrixL", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kLmode, "FBMatrixL", sprintfk("alpha(%f)", 0.5)
 elseif kLModeVal == 2 then
-    cabbageSet kLmode, "FBMatrixL", sprintfk("toFront(%i)", 1)
+    cabbageSet kLmode, "FBMatrixL", sprintfk("toFront(%i), alpha(%f)", 1, 1)
+    cabbageSet kLmode, "DelMatrixL", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kLmode, "attenMatrixL", sprintfk("alpha(%f)", 0.5)
 endif
+
 
 kRModeVal, kRmode cabbageGet "TimeFeedModeR"
 if kRModeVal == 0 then
-    cabbageSet kRmode, "attenMatrixR", sprintfk("toFront(%i)", 1)
+    cabbageSet kRmode, "attenMatrixR", sprintfk("toFront(%i), alpha(%f)", 1, 1)
+    cabbageSet kRmode, "DelMatrixR", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kRmode, "FBMatrixR", sprintfk("alpha(%f)", 0.5)
 elseif kRModeVal == 1 then
-    cabbageSet kRmode, "DelMatrixR", sprintfk("toFront(%i)", 1)
+    cabbageSet kRmode, "DelMatrixR", sprintfk("toFront(%i), alpha(%f)", 1, 1)
+    cabbageSet kRmode, "attenMatrixR", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kRmode, "FBMatrixR", sprintfk("alpha(%f)", 0.5)
 elseif kRModeVal == 2 then
-    cabbageSet kRmode, "FBMatrixR", sprintfk("toFront(%i)", 1)
+    cabbageSet kRmode, "FBMatrixR", sprintfk("toFront(%i), alpha(%f)", 1, 1)
+    cabbageSet kRmode, "DelMatrixR", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kRmode, "attenMatrixR", sprintfk("alpha(%f)", 0.5)
 endif
-
     
 //# Table Copy Function
+if changed(chnget:k("CopyL")) > 0 || changed(chnget:k("CopyR")) > 0 then
 if chnget:k("CopyL") > 0 &&  kLModeVal == 0 then ; Left copy button is activated and its in filter mode
     tablecopy gigraphR, gigraphL
     updateTable 102, "attenMatrixR"
@@ -489,6 +508,7 @@ elseif chnget:k("CopyL") > 0 && kLModeVal == 2 then
 elseif chnget:k("CopyR") > 0 && kRModeVal == 2 then  
     tablecopy giFBTableL, giFBTableR
     updateTable 107, "FBMatrixL"
+endif
 endif
 
 //# RENDERING
@@ -546,14 +566,68 @@ gkStopButton, kTrigStop cabbageGetValue "StopMode"
     kgranularmodmode, kgranModModeChanged cabbageGet "GranularModMode"
     cabbageSet kgranModModeChanged, "GranularLFO", sprintfk("visible(%i)", 1-kgranularmodmode)
     cabbageSet kgranModModeChanged, "GranularSpline", sprintfk("visible(%i)", kgranularmodmode)
+
+//# FFT Settings
+    kbandsize, kbandSizeChanged cabbageGet "AnalysisBands"  
+    if kbandSizeChanged > 0 then 
+        if ki2 > 0 || kinputmode > 0 then ;&& chnget:k("PlayMode") > 0 then; turn off running instance of 2
+            turnoff2 2, 0, 0
+            event "i", 2, 0, 500000 ; reinstance instr 2 with new window size
+        endif
+    endif
+    
 endin
 
    
 instr 2
 kdx init 0
+prints "instr 2 begin\n"
+ibandsize chnget "AnalysisBands"
+    if ibandsize == 1 then
+        gifftsize = 64
+    elseif ibandsize == 2 then
+        gifftsize = 128
+    elseif ibandsize == 3 then
+        gifftsize = 256
+    elseif ibandsize == 4 then
+        gifftsize = 512
+    elseif ibandsize == 5 then
+        gifftsize = 1024
+    endif
+gibands = gifftsize/16 
+
+gimaskL ftgentmp 98, 0, gifftsize, -2, 0
+gimaskR ftgentmp 99, 0, gifftsize, -2, 0
+
+gidelL ftgentmp 104, 0, gifftsize, -2, 0
+gidelR ftgentmp 106, 0, gifftsize, -2, 0
+
+ifbL ftgentmp 108, 0, gifftsize, -2, 0
+ifbR ftgentmp 110, 0, gifftsize, -2, 0
+
+    mouseListen 101, "attenMatrixL"
+    mouseListen 102, "attenMatrixR"
+    mouseListen 103, "DelMatrixL"
+    mouseListen 105, "DelMatrixR"
+    mouseListen 107, "FBMatrixL"
+    mouseListen 109, "FBMatrixR"
+
+
+
+kinitTables init 0
+if kinitTables < 1 then
+    updateTable 102, "attenMatrixR"
+    updateTable 101, "attenMatrixL"
+    updateTable 105, "DelMatrixR"
+    updateTable 103, "DelMatrixL"
+    updateTable 109, "FBMatrixR"
+    updateTable 107, "FBMatrixL"
+    kinitTables = 100
+endif
+
 aSpecInL, aSpecInR, aGrainInL, aGrainInR init 0
-ioverlap = gifftsize*0.25
-iwinsize = gifftsize*2
+ioverlap = gifftsize/4 ;needs to be at least ifftsize/4
+iwinsize = gifftsize  ;must be at least ifftsize
 imaxlen = 5 ;max length of delay buffer
 
 aInputL inch 1
@@ -586,9 +660,11 @@ ainR = ainputR*chnget:k("Gain")
 	    andx phasor kndx
 	    tablew   aGrainInL, andx, giRecBuf1L,1 ; write audio to buffer
  	    tablew   aGrainInR, andx, giRecBuf1R,1 
-  
-fftinL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 1
-fftinR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 1
+
+;iwindow = chnget("WindowType")
+fftinL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 0
+fftinR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 0
+
 
 //# SPECTRAL MODULATION
     kSpectralSplineMode chnget "SpectralModMode"
@@ -642,13 +718,14 @@ fdelmaskL pvsinit gifftsize
 kAttenModSumL = limit(kattenmod1L+kattenmod2L, 0, 1) ; sum both mod signals and limit to acceptable range
 fmaskL pvsmaska fftinL, gimaskL, 1-kAttenModSumL
 //Left Delay Line and Buffer
-
 ffbL pvsmix fmaskL, fdelmaskL ; mix feedback mask back into buffer
 ibufL, kwriteTimeL pvsbuffer ffbL, imaxlen
 fdelL pvsbufread2 kwriteTimeL, ibufL, gidelL, gidelL ;ift 1 & 2 at least n/2 + 1 positions long. n= # bins
 kDelModSumL = limit(kdelmod1L+kdelmod2L, 0, 1) ; sum both mod signals and limit to acceptable range
 fdelmaskL pvsmaska fdelL, gifbL, 1-(kDelModSumL) ; mask fdelL with feedback table
 aSpectralOutL    pvsynth  fdelL
+
+
 
 fdelmaskR pvsinit gifftsize
 kAttenModSumR = limit(kattenmod1R+kattenmod2R, 0, 1) ; sum both mod signals and limit to acceptable range
@@ -659,8 +736,8 @@ ibufR, kwriteTimeR pvsbuffer ffbR, imaxlen
 fdelR pvsbufread2 kwriteTimeR, ibufR, gidelR, gidelR ;ift 1 & 2 at least n/2 + 1 positions long. n= # bins
 kDelModSumR = limit(kdelmod1R+kdelmod2R, 0, 1) ; sum both mod signals and limit to acceptable range
 fdelmaskR pvsmaska fdelR, gifbR, 1-kDelModSumR ; mask fdelR with feedback table
-
 aSpectralOutR    pvsynth  fdelR
+
 
 afftOutL = aSpectralOutL
 afftOutR = aSpectralOutR
