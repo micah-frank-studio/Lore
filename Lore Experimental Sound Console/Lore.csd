@@ -17,7 +17,7 @@ form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
 image bounds(0,0,970,1000) file("includes/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.2"), fontSize(11), align("left"), channel("VersionNumber")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.2"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
 
 image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
 image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0), alpha(0.5)
@@ -26,7 +26,7 @@ image bounds(440,100,400,75), channel("FBMatrixR"), colour(185,31,88,0), alpha(0
 image bounds(20,100,400,75), channel("attenMatrixL"), colour(200,200,0,0)
 image bounds(440,100,400,75), channel("attenMatrixR"), colour(100,100,200,0)
 
-label bounds(3000,23,200,15), fontColour(200,200,200), fontSize(12), text(""), channel("SliderValue"), colour(0,0,0,0)
+label bounds(3000,23,200,15), fontColour(200,200,200), fontSize(12), text(""), channel("SliderValue"), colour(0,0,0,0), fontStyle("Regular")
 
 label bounds(240,23,200,15), fontColour(200,200,200), text("SET A SOURCE FILE --->"), alpha(0), channel("SampleWarning")
 
@@ -42,7 +42,8 @@ hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN
 }
 
 groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("SPECTRAL MODULATIONS -------------------------"), fontSize(15) 
+    label bounds(5,0,400,16), align("left"), text("SPECTRAL MODULATIONS -------------------------"), fontSize(15), fontStyle("Regular")
+
     button bounds(342, 0, 60, 18), latched(1), channel("SpectralModMode"), text("LFO","SPLINE"), $BUTTON1, automatable(0)
     //Spectral LFO PANEL
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("SpectralLFO"), visible(1) {
@@ -68,7 +69,7 @@ groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
 
 
 groupbox bounds(437,235,410,250), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("ROUTING & EFFECTS -----"), fontSize(15) 
+    label bounds(5,0,400,16), align("left"), text("ROUTING & EFFECTS -----"), fontSize(15), fontStyle("Regular")
     ;label bounds(110,30,400,16), align("left"), text("REVERB TYPE"), fontSize(12) 
     ;combobox bounds(107, 50, 100, 20), items("Algorithmic","Convolution"), channel("ReverbType"), value(1), automatable(0)
     
@@ -77,7 +78,7 @@ groupbox bounds(437,235,410,250), colour(0,0,0,0), lineThickness(0),outlineThick
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls1"), text("") $GROUPBOX {
 image bounds(183, 0, 20, 20) channel("Effect_Icon1")
-combobox bounds(220, 0, 100, 20), channel("EffectList1"), channelType("string"), $EFFECTLIST
+combobox bounds(220, 0, 100, 20), channel("EffectList1"), channelType("string"), value("Empty") $EFFECTLIST
 combobox bounds(0, 30, 140, 20), channel("EffectCombo1_1"), visible(0)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_1"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_1"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
@@ -90,7 +91,7 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_1"), text("MACRO 6"), ra
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls2"), text("") visible(0) $GROUPBOX {
 image bounds(183, 0, 20, 20) channel("Effect_Icon2")
-combobox bounds(220, 0, 100, 20) channel("EffectList2"), channelType("string"), $EFFECTLIST
+combobox bounds(220, 0, 100, 20) channel("EffectList2"), channelType("string"), value("Empty") $EFFECTLIST
 combobox bounds(0, 30, 140, 20), channel("EffectCombo1_2"), visible(0)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_2"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_2"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
@@ -102,7 +103,7 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_2"), text("MACRO 6"), ra
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls3"), text("") visible(0) $GROUPBOX {
 image bounds(183, 0, 20, 20) channel("Effect_Icon3")
-combobox bounds(220, 0, 100, 20) channel("EffectList3"), channelType("string") $EFFECTLIST
+combobox bounds(220, 0, 100, 20) channel("EffectList3"), channelType("string"), value("Empty") $EFFECTLIST
 combobox bounds(0, 30, 140, 20), channel("EffectCombo1_3"), visible(0)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_3"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001)  $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_3"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001)  $SLIDER1
@@ -115,7 +116,7 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_3"), text("MACRO 6"), ra
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls4"), text("") visible(0) $GROUPBOX {
 image bounds(183, 0, 20, 20) channel("Effect_Icon4")
-combobox bounds(220, 0, 100, 20) channel("EffectList4"), channelType("string") $EFFECTLIST
+combobox bounds(220, 0, 100, 20) channel("EffectList4"), channelType("string"), value("Empty") $EFFECTLIST
 combobox bounds(0, 30, 140, 20), channel("EffectCombo1_4"), visible(0)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_4"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_4"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
@@ -127,7 +128,7 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_4"), text("MACRO 6"), ra
 }
 optionbutton bounds(340, 0, 60, 20), latched(1), channel("EffectSelect"), colour:0(0, 0, 0, 200), items(" 1 >", " 2 >", " 3 >", " 4 >"), $BUTTON1   
 
-label bounds(5,217,90,16), align("left"), text("MODULE CHAIN"), fontSize(12) 
+label bounds(5,217,90,16), align("left"), text("MODULE CHAIN"), fontSize(12), fontStyle("Regular")
 combobox bounds(100, 215, 100, 20), items("Parallel","Spec > Grain","Grain > Spec"), channel("audioRouting"), value(1), automatable(0)
     
 
@@ -148,7 +149,7 @@ optionbutton bounds(440, 190, 60, 20), latched(1), channel("TimeFeedModeR"), ite
 //# Granular Control
 ;CHANNEL 1
 groupbox bounds(16,450,855,200), colour(0,0,0,0), lineThickness(0),outlineThickness(0){
-label bounds(5,0,400,16), align("left"), text("GRANULAR CONTROLS --------------------------------------"), fontSize(15) 
+label bounds(5,0,400,16), align("left"), text("GRANULAR CONTROLS --------------------------------------"), fontSize(15), fontStyle("Regular") 
 hslider bounds(0, 30, 200, 20), channel("Pitch1"), text("PITCH"), range(-2, 2, 1, 1, 0.0)  $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("Stretch1"), text("STRETCH"), range(0.01, 2, 0.287, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("Density1"), text("DENSITY"), range(2, 20, 8, 1, 0.001) $SLIDER1
@@ -162,7 +163,7 @@ combobox bounds(633, 55, 70, 20), channel("Type1"), items("LPF", "HPF"), value(1
 
 
 groupbox bounds(16,545,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS -------------------------"), fontSize(15) 
+    label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS -------------------------"), fontSize(15), fontStyle("Regular")
      button bounds(342, 0, 60, 18), latched(1), channel("GranularModMode"), text("LFO","SPLINE"), $BUTTON1, automatable(0)
     //Granular LFO PANEL
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("GranularLFO"), visible(1) {
@@ -188,7 +189,7 @@ groupbox bounds(16,545,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
 
 //# MIXER CONTROLS
 groupbox bounds(437,545,500,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(0,0,400,16), align("left"), text("MASTER BUS ---------------------------------------------"), fontSize(15) 
+    label bounds(0,0,400,16), align("left"), text("MASTER BUS ---------------------------------------------"), fontSize(15), fontStyle("Regular") 
     hslider bounds(0,30, 200, 20), channel("InputMix"), range(0,1,0.5,1), text ("INPUT") $SLIDER1
     hslider bounds(0,55, 200, 20), channel("SpectralMix"), range(0,1,0.5,1), text ("SPECTRAL") $SLIDER1
     hslider bounds(0,80, 200, 20), channel("GrainMix"), range(0,1,0.5,1), text ("GRAIN") $SLIDER1
@@ -477,15 +478,6 @@ elseif kinputmode > 0 && kinputChange > 0 then
     cabbageSet kinputChange, "SampleWarning", "alpha", "0"
 endif
 
-/*if ki2 < 1 then ; enable mousing on graph when not playing just for UX ; this section needs some work as it's overriding the mouse behaviours
-    mouseListen 101, "attenMatrixL"
-    mouseListen 102, "attenMatrixR"
-    mouseListen 103, "DelMatrixL"
-    mouseListen 105, "DelMatrixR"
-    mouseListen 107, "FBMatrixL"
-    mouseListen 109, "FBMatrixR"
-endif
-*/
 //# RANDOM Function
 if changed(chnget:k("Random")) > 0 then
     if chnget:k("Random") > 0 then
@@ -648,10 +640,10 @@ gkStopButton, kTrigStop cabbageGetValue "StopMode"
     cabbageSet "EffectList2", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir)
     cabbageSet "EffectList3", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir) 
     cabbageSet "EffectList4", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir) 
-    cabbageSetValue "EffectList1", "Empty"
-    cabbageSetValue "EffectList2", "Empty"
-    cabbageSetValue "EffectList3", "Empty"
-    cabbageSetValue "EffectList4", "Empty"
+    ;cabbageSetValue "EffectList1", "Empty"
+    ;cabbageSetValue "EffectList2", "Empty"
+    ;cabbageSetValue "EffectList3", "Empty"
+    ;cabbageSetValue "EffectList4", "Empty"
 endin
 
    
@@ -926,32 +918,13 @@ adryR chnget "drymixR"
     
 amixL ntrpol adryL, aefxL, keffectsmix
 amixR ntrpol adryR, aefxR, keffectsmix    
-;areverbL chnget "verbReturnL"
-;areverbR chnget "verbReturnR"
 
 koutput chnget "Output"
-
-;amixL = (adryL+areverbL)*koutput
-;amixR = (adryR+areverbR)*koutput
-
 
 chnset amixL*koutput, "RecordBusL"
 chnset amixR*koutput, "RecordBusR"
 
-;chnset (adryL+areverbL)*koutput, "RecordBusL"
-;chnset (adryR+areverbR)*koutput, "RecordBusR"
 outs amixL*koutput, amixR*koutput
-
-/* Render to opcode 
-gSSaveFile, kTrigRecord cabbageGetValue "RecordMode"
-krecordVal, krecordValTrig cabbageGetValue "RecordMode"
-
-    if krecordVal > 0 then
-       Sfilename strcatk  gSSaveFile, ".wav"
-       renderFile amixL, amixR, Sfilename 
-       printk2 krecordVal   
-    endif
-*/
 
 chnclear "drymixL"
 chnclear "drymixR"
@@ -963,14 +936,9 @@ endin
 instr 100 ;recorder
     
     prints "recording started\n"
-
-	;amixL, amixR monitor
 	
 	amixL chnget "RecordBusL"
     amixR chnget "RecordBusR"
-    
-    ;Sfilename strcat  gSSaveFile, ".wav"
-	;fout Sfilename, 18, amixL, amixR
 	renderFile amixL, amixR, gSSaveFile 
 
 endin
@@ -980,7 +948,6 @@ endin
 <CsScore>
 i1 0 500000
 i5 0 500000 ;Effects Listener
-;i98 0 500000 ;reverb
 i99 0 500000 ;mixer
 </CsScore>
 </CsoundSynthesizer>
