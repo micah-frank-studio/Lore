@@ -12,7 +12,7 @@
 ; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
 
-form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), typeface("includes/Inconsolata-Regular.ttf"), opcodeDir("."), bundle("./includes")
+form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
@@ -694,7 +694,7 @@ if kinitTables < 1 then
 endif
 
 aSpecInL, aSpecInR, aGrainInL, aGrainInR init 0
-ioverlap = gifftsize/4 ;needs to be at least ifftsize/4
+ioverlap = gifftsize/2 ;needs to be at least ifftsize/4
 iwinsize = gifftsize  ;must be at least ifftsize
 imaxlen = 5 ;max length of delay buffer
 
