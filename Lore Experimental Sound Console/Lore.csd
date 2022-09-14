@@ -12,13 +12,13 @@
 ; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
 
-form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), typeface("includes/Inconsolata-Regular.ttf"), openGL(1), opcodeDir("."), bundle("./includes")
+form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes");,  typeface("includes/Inconsolata-Regular.ttf")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define BUTTON2 fontColour:0("200,200,200,180"), fontColour:1("0,200,0,250"), outlineColour("200,200,200"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
 image bounds(0,0,970,1000) file("includes/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.22"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.23"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
 
 image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
 image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0), alpha(0.5)
@@ -38,7 +38,7 @@ filebutton bounds (25, 20, 100, 20), populate("*.wav *.aif", "."), mode("file"),
 button bounds(130, 20, 60, 20), latched(1), channel("PlayMode"), text("PLAY", "PLAY") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0)
 button bounds(3000, 20, 60, 20), latched(0), channel("StopMode"), text("STOP") $BUTTON1 outlineColour(185,31,88), fontColour:0(250,250,250), fontColour:1(250,250,250), automatable(0)
 filebutton bounds(195, 20, 60, 20), latched(0), mode("save"), text("RENDER"), populate("*.wav", "."), channel("RecordMode"), colour(0,0,0,0) $BUTTON1, automatable(0)
-button bounds(260, 20, 30, 20), latched(0), text("?"), channel("HelpButtonText"), $BUTTON1, automatable(0)
+button bounds(260, 20, 60, 20), latched(0), text("HELP"), channel("HelpButtonText"), $BUTTON1, automatable(0)
 infobutton bounds(260, 20, 30, 20), latched(0), text(""), channel("HelpButton"), file("https://ec2.puremagnetik.com/LoreManual.html"), colour("0,0,0,0"), automatable(0), alpha(0)
 hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN"), $SLIDER1
 
@@ -72,7 +72,7 @@ groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
 
 
 groupbox bounds(437,235,410,250), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("ROUTING & EFFECTS -----"), fontSize(15), fontStyle("Regular")
+    label bounds(5,0,400,16), align("left"), text("EFFECTS CHAIN ----------"), fontSize(15), fontStyle("Regular")
     ;label bounds(110,30,400,16), align("left"), text("REVERB TYPE"), fontSize(12)
     ;combobox bounds(107, 50, 100, 20), items("Algorithmic","Convolution"), channel("ReverbType"), value(1), automatable(0)
 
@@ -144,6 +144,8 @@ button bounds(777, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L") $B
 button bounds(100, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), $BUTTON1, automatable(0)
 ;combobox bounds(168, 190, 70, 20), items("Hamming", "von Hamm", "Kaiser"), channel("WindowType"), automatable(0)
 combobox bounds(180, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0)
+optionbutton bounds(260, 190, 60, 20), latched(1), channel("SpectralFreeze"), items("FREEZE", "AMP", "FREQ", "BOTH") $BUTTON1, automatable(1)
+
 button bounds(520, 190, 60, 20), latched(1), channel("Arp"), text("ARP"), $BUTTON2, automatable(0)
 hslider bounds(590, 186, 160, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0), $SLIDER1
 hslider bounds(590, 206, 160, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0) $SLIDER1
@@ -285,6 +287,25 @@ opcode updateTable, 0, kS
     SPath strcpyk ""
 endop
 
+opcode saveTableState, 0, ikk 
+     iTable, kIndex, kVal xin
+     Sindex = sprintfk("%i%i", iTable, kIndex)
+     cabbageSetStateValue Sindex, kVal
+endop
+
+opcode getTableState, 0, ik
+     iTable, kIndex xin
+     Sindex = sprintfk("%i%i", iTable, kIndex)
+     kVal cabbageGetStateValue Sindex
+     tabw kVal, kIndex, iTable
+     updateTable 102, "attenMatrixR"
+     updateTable 101, "attenMatrixL"
+     updateTable 105, "DelMatrixR"
+     updateTable 103, "DelMatrixL"
+     updateTable 109, "FBMatrixR"
+     updateTable 107, "FBMatrixL"
+endop
+
 opcode mouseListen, 0, iS
     iTable, SVGChannel xin
     iTableBounds[] cabbageGet SVGChannel, "bounds"
@@ -294,19 +315,19 @@ opcode mouseListen, 0, iS
     kMouseDown chnget "MOUSE_DOWN_LEFT"
     SWidget, kTrigWidgetChange cabbageGet "CURRENT_WIDGET"
     itableRight = iTableBounds[0] + iTableBounds[2]
-    ;itableTop = iTableBounds[1] + iTableBounds[3]
     if strcmpk(SWidget, SVGChannel) == 0 && kMouseDown == 1 && kMouseX > iTableBounds[0] && kMouseX < itableRight then
         if kMouseY > iTableBounds[1] then ;&& kMouseY < itableTop then
         kYAmp = 1 - int(((kMouseY-iTableBounds[1])/iTableBounds[3])*10)/ 10
         kXIndex = int(((kMouseX-iTableBounds[0]) / iTableBounds[2])*iLength)
         tabw kYAmp, kXIndex, iTable
-        ;printk2 kYAmp
             if changed:k(kXIndex) == 1 || changed:k(kYAmp) == 1 then
                 updateTable iTable, SVGChannel
+                saveTableState iTable, kXIndex, kYAmp
             endif
         endif
     endif
 endop
+
 
 //# AUDIO ROUTER
 opcode audioRoute, aaaa, aaaaaak
@@ -443,6 +464,7 @@ kinitTables init 0
 cabbageSet "RecordMode", sprintf("populate(\"*\", \"%s\")", chnget:S("USER_HOME_DIRECTORY"))
 
 if kinitTables < 1 then
+    kloadTableBands init 0
     updateTable 102, "attenMatrixR"
     updateTable 101, "attenMatrixL"
     updateTable 105, "DelMatrixR"
@@ -450,7 +472,12 @@ if kinitTables < 1 then
     updateTable 109, "FBMatrixR"
     updateTable 107, "FBMatrixL"
     kinitTables = 100
+    if kloadTableBands < gibands then
+        getTableState 101, kloadTableBands ;iTable, kIndex
+        kloadTableBands+=1
+    endif
 endif
+
 
 SDroppedFile, kDroppedTrig cabbageGet "LAST_FILE_DROPPED"
 SBrowsedFile, kBrowsedTrig cabbageGet "File"
@@ -513,11 +540,17 @@ if changed(chnget:k("Random")) > 0 then
         kval107 = abs(rand(0.9,4))
         kval109 = abs(rand(0.9,0.5))
         tabw kval101, krandcnt, 101
+            saveTableState 101, krandcnt, kval101
         tabw kval102, krandcnt, 102
+            saveTableState 102, krandcnt, kval102
         tabw kval103, krandcnt, 103
+            saveTableState 103, krandcnt, kval103
         tabw kval105, krandcnt, 105
+            saveTableState 105, krandcnt, kval105
         tabw kval107, krandcnt, 107
+            saveTableState 107, krandcnt, kval107
         tabw kval109, krandcnt, 109
+            saveTableState 109, krandcnt, kval109
         krandcnt += 1
         kgoto loadRandVals
     endif
@@ -752,9 +785,33 @@ ainR = ainputR*chnget:k("Gain")
  	    tablew   aGrainInR, andx, giRecBuf1R,1
 
 ;iwindow = chnget("WindowType")
-fftinL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 0
-fftinR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 0
+fanalyL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 0
+fanalyR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 0
 
+// Spectral Freeze Logic
+kfreezeState = chnget:k("SpectralFreeze")
+if kfreezeState == 0 then
+    kFreezeAmp = 0
+    kFreezeFreq = 0
+elseif kfreezeState == 1 then
+    kFreezeAmp =1
+    kFreezeFreq = 0
+elseif kfreezeState == 2 then
+    kFreezeAmp = 0
+    kFreezeFreq = 1
+    printk2 kFreezeAmp
+elseif kfreezeState == 3 then
+    kFreezeAmp = 1
+    kFreezeFreq = 1
+endif    
+
+if kfreezeState > 0 then
+    fftinL pvsfreeze fanalyL, kFreezeAmp, kFreezeFreq
+    fftinR pvsfreeze fanalyR, kFreezeAmp, kFreezeFreq
+else 
+    fftinL = fanalyL
+    fftinR = fanalyR
+endif
 
 //# SPECTRAL MODULATION
     kSpectralSplineMode chnget "SpectralModMode"
@@ -805,6 +862,7 @@ endif
 
 
 fdelmaskL pvsinit gifftsize
+
 kAttenModSumL = limit(kattenmod1L+kattenmod2L, 0, 1) ; sum both mod signals and limit to acceptable range
 ;fmaskL pvsmaska fftinL, gimaskL, 1-kAttenModSumL
 karpDepth chnget "ArpDepth"
@@ -820,6 +878,8 @@ else
     cabbageSet metro(20), "ArpDepth", "alpha(0)"
     cabbageSet metro(20), "ArpSpeed", "alpha(0)"
 endif
+
+
 //Left Delay Line and Buffer
 ffbL pvsmix fmaskL, fdelmaskL ; mix feedback mask back into buffer
 ibufL, kwriteTimeL pvsbuffer ffbL, imaxlen
