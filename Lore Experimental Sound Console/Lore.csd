@@ -18,7 +18,7 @@ form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("
 #define BUTTON2 fontColour:0("200,200,200,180"), fontColour:1("0,200,0,250"), outlineColour("200,200,200"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
 image bounds(0,0,970,1000) file("includes/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.23"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.24"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
 
 image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
 image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0), alpha(0.5)
@@ -39,7 +39,7 @@ button bounds(130, 20, 60, 20), latched(1), channel("PlayMode"), text("PLAY", "P
 button bounds(3000, 20, 60, 20), latched(0), channel("StopMode"), text("STOP") $BUTTON1 outlineColour(185,31,88), fontColour:0(250,250,250), fontColour:1(250,250,250), automatable(0)
 filebutton bounds(195, 20, 60, 20), latched(0), mode("save"), text("RENDER"), populate("*.wav", "."), channel("RecordMode"), colour(0,0,0,0) $BUTTON1, automatable(0)
 button bounds(260, 20, 60, 20), latched(0), text("HELP"), channel("HelpButtonText"), $BUTTON1, automatable(0)
-infobutton bounds(260, 20, 30, 20), latched(0), text(""), channel("HelpButton"), file("https://ec2.puremagnetik.com/LoreManual.html"), colour("0,0,0,0"), automatable(0), alpha(0)
+infobutton bounds(260, 20, 60, 20), latched(0), text(""), channel("HelpButton"), file("https://ec2.puremagnetik.com/LoreManual.html"), colour("0,0,0,0"), automatable(0), alpha(0)
 hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN"), $SLIDER1
 
 }
@@ -73,11 +73,6 @@ groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
 
 groupbox bounds(437,235,410,250), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
     label bounds(5,0,400,16), align("left"), text("EFFECTS CHAIN ----------"), fontSize(15), fontStyle("Regular")
-    ;label bounds(110,30,400,16), align("left"), text("REVERB TYPE"), fontSize(12)
-    ;combobox bounds(107, 50, 100, 20), items("Algorithmic","Convolution"), channel("ReverbType"), value(1), automatable(0)
-
-    ;label bounds(214,30,400,16), channel("impulsesLabel"), align("left"), text("IMPULSES"), fontSize(12), alpha(0.5)
-
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls1"), text("") $GROUPBOX {
 image bounds(183, 0, 20, 20) channel("Effect_Icon1")
@@ -212,6 +207,7 @@ groupbox bounds(437,545,500,150), colour(0,0,0,0), lineThickness(0),outlineThick
 signaldisplay bounds(20, 360, 400, 70), displayType("spectrogram"), backgroundColour(20,20,20), zoom(-1), signalVariable("afftOutL"), skew(0.5)
 signaldisplay bounds(440, 360, 400, 70), displayType("spectrogram"), backgroundColour(20,20,20), zoom(-1), signalVariable("afftOutR"), skew(0.5)
 }
+;csoundoutput bounds(14, 198, 345, 172) channel("csoundoutput1"), fontColour(147, 210, 0)
 
 </Cabbage>
 <CsoundSynthesizer>
@@ -294,16 +290,19 @@ opcode saveTableState, 0, ikk
 endop
 
 opcode getTableState, 0, ik
-     iTable, kIndex xin
-     Sindex = sprintfk("%i%i", iTable, kIndex)
-     kVal cabbageGetStateValue Sindex
-     tabw kVal, kIndex, iTable
-     updateTable 102, "attenMatrixR"
-     updateTable 101, "attenMatrixL"
-     updateTable 105, "DelMatrixR"
-     updateTable 103, "DelMatrixL"
-     updateTable 109, "FBMatrixR"
-     updateTable 107, "FBMatrixL"
+        iTable, kIndex xin
+        Sindex = sprintfk("%i%i", iTable, kIndex)
+        kVal cabbageGetStateValue Sindex
+        tabw kVal, kIndex, iTable
+        Sval=sprintfk("%f", kVal)
+        kvalLen strlenk Sval
+        printks2 "kvalleng=%i", kvalLen
+        updateTable 102, "attenMatrixR"
+        updateTable 101, "attenMatrixL"
+        updateTable 105, "DelMatrixR"
+        updateTable 103, "DelMatrixL"
+        updateTable 109, "FBMatrixR"
+        updateTable 107, "FBMatrixL"
 endop
 
 opcode mouseListen, 0, iS
@@ -460,11 +459,11 @@ opcode renderFile, 0, aaS
 endop
 
 instr 1
-kinitTables init 0
+
 cabbageSet "RecordMode", sprintf("populate(\"*\", \"%s\")", chnget:S("USER_HOME_DIRECTORY"))
 
+kinitTables init 0
 if kinitTables < 1 then
-    kloadTableBands init 0
     updateTable 102, "attenMatrixR"
     updateTable 101, "attenMatrixL"
     updateTable 105, "DelMatrixR"
@@ -472,12 +471,28 @@ if kinitTables < 1 then
     updateTable 109, "FBMatrixR"
     updateTable 107, "FBMatrixL"
     kinitTables = 100
-    if kloadTableBands < gibands then
-        getTableState 101, kloadTableBands ;iTable, kIndex
-        kloadTableBands+=1
-    endif
 endif
 
+kinitState init 0 
+
+kinitState delayk kinitState, 0.05
+if kinitState < 1 then
+    kHaveState = cabbageHasStateData()
+    kinitState = 1 
+endif
+
+kRecallIndex init 0
+   if kHaveState > 0 then
+       if kRecallIndex < gibands  then
+            getTableState 102, kRecallIndex
+            getTableState 101, kRecallIndex
+            getTableState 105, kRecallIndex
+            getTableState 103, kRecallIndex
+            getTableState 109, kRecallIndex
+            getTableState 107, kRecallIndex
+            kRecallIndex += 1
+        endif
+    endif 
 
 SDroppedFile, kDroppedTrig cabbageGet "LAST_FILE_DROPPED"
 SBrowsedFile, kBrowsedTrig cabbageGet "File"
@@ -703,6 +718,7 @@ endin
 
 
 instr 2
+
 kdx init 0
 prints "instr 2 begin\n"
 ibandsize chnget "AnalysisBands"
@@ -868,15 +884,16 @@ kAttenModSumL = limit(kattenmod1L+kattenmod2L, 0, 1) ; sum both mod signals and 
 karpDepth chnget "ArpDepth"
 karpSpeed chnget "ArpSpeed"
 kbinLFO=abs(lfo(karpDepth, karpSpeed))
-if chnget:k("Arp") > 0 then
+karpState, kArpTrig cabbageGet "Arp"
+if karpState > 0 then
     fArpsigL pvsarp fftinL, kbinLFO+0.01, 0.9, 10
     fmaskL pvsmaska fArpsigL, gimaskL, 1-kAttenModSumL
-    cabbageSet metro(20), "ArpDepth", "alpha(1)"
-    cabbageSet metro(20), "ArpSpeed", "alpha(1)"
+    cabbageSet kArpTrig, "ArpDepth", "alpha(1)"
+    cabbageSet kArpTrig, "ArpSpeed", "alpha(1)"
 else 
     fmaskL pvsmaska fftinL, gimaskL, 1-kAttenModSumL
-    cabbageSet metro(20), "ArpDepth", "alpha(0)"
-    cabbageSet metro(20), "ArpSpeed", "alpha(0)"
+    cabbageSet kArpTrig, "ArpDepth", "alpha(0)"
+    cabbageSet kArpTrig, "ArpSpeed", "alpha(0)"
 endif
 
 
