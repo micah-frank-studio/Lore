@@ -98,3 +98,9 @@ endin
 
 instr 14, ImpulseVerb
 endin
+
+instr 15, Scrambler
+endin
+
+instr 16, GhostEcho
+endin
