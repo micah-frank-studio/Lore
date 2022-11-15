@@ -12,13 +12,13 @@
 ; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
 
-form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes");,  typeface("includes/Inconsolata-Regular.ttf")
+form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes"),  typeface("includes/Inconsolata-Regular.ttf")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define BUTTON2 fontColour:0("200,200,200,180"), fontColour:1("0,200,0,250"), outlineColour("200,200,200"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
 image bounds(0,0,970,1000) file("includes/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.24"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.25"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
 
 image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
 image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0), alpha(0.5)
@@ -138,14 +138,14 @@ button bounds(777, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L") $B
 
 button bounds(100, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), $BUTTON1, automatable(0)
 ;combobox bounds(168, 190, 70, 20), items("Hamming", "von Hamm", "Kaiser"), channel("WindowType"), automatable(0)
-combobox bounds(180, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0)
-optionbutton bounds(260, 190, 60, 20), latched(1), channel("SpectralFreeze"), items("FREEZE", "AMP", "FREQ", "BOTH") $BUTTON1, automatable(1)
+combobox bounds(172, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0)
+hslider bounds(302, 190, 50, 20), channel("BlurTime"), text(""), range(0.005, 2, 0.8, 0.5, 0.001), alpha(0), automatable(1) $SLIDER1
+combobox bounds(246, 190, 100, 20), latched(1), channel("SpectralFreeze"), items("No Freeze", "Freeze Amp", "Freeze Freq", "Freeze A/F", "Blur"), value(1), automatable(1)
 
 button bounds(520, 190, 60, 20), latched(1), channel("Arp"), text("ARP"), $BUTTON2, automatable(0)
 hslider bounds(590, 186, 160, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0), $SLIDER1
 hslider bounds(590, 206, 160, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0) $SLIDER1
 
-;combobox bounds(308, 190, 40, 20), items("8","16","32","64"), channel("Resolution"), value(3), automatable(0)
 
 optionbutton bounds(20, 190, 60, 20), latched(1), channel("TimeFeedModeL"), items("FILTER", "TIME", "FBACK") $BUTTON1, automatable(0)
 optionbutton bounds(440, 190, 60, 20), latched(1), channel("TimeFeedModeR"), items("FILTER", "TIME", "FBACK") $BUTTON1, automatable(0)
@@ -710,10 +710,6 @@ gkStopButton, kTrigStop cabbageGetValue "StopMode"
     cabbageSet "EffectList2", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir)
     cabbageSet "EffectList3", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir)
     cabbageSet "EffectList4", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir)
-    ;cabbageSetValue "EffectList1", "Empty"
-    ;cabbageSetValue "EffectList2", "Empty"
-    ;cabbageSetValue "EffectList3", "Empty"
-    ;cabbageSetValue "EffectList4", "Empty"
 endin
 
 
@@ -800,32 +796,50 @@ ainR = ainputR*chnget:k("Gain")
 	    tablew   aGrainInL, andx, giRecBuf1L,1 ; write audio to buffer
  	    tablew   aGrainInR, andx, giRecBuf1R,1
 
-;iwindow = chnget("WindowType")
+aSpecInLFilt butterhp aSpecInL, 450
+aSpecInRFilt butterhp aSpecInR, 450
+
 fanalyL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 0
 fanalyR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 0
 
 // Spectral Freeze Logic
-kfreezeState = chnget:k("SpectralFreeze")
-if kfreezeState == 0 then
+;kfreezeState = chnget:k("SpectralFreeze")
+kfreezeState, kFreezeTrig cabbageGet "SpectralFreeze"
+if kfreezeState == 1 then //no freeze
     kFreezeAmp = 0
-    kFreezeFreq = 0
-elseif kfreezeState == 1 then
-    kFreezeAmp =1
     kFreezeFreq = 0
 elseif kfreezeState == 2 then
+    kFreezeAmp = 1
+    kFreezeFreq = 0
+elseif kfreezeState == 3 then
     kFreezeAmp = 0
     kFreezeFreq = 1
-    printk2 kFreezeAmp
-elseif kfreezeState == 3 then
+elseif kfreezeState == 4 then
     kFreezeAmp = 1
     kFreezeFreq = 1
-endif    
+elseif kfreezeState == 5 then //spectral blur
+    kFreezeAmp = 0
+    kFreezeFreq = 0
+endif  
 
-if kfreezeState > 0 then
+if kfreezeState > 4 then //show blur controls
+    cabbageSet kFreezeTrig, "SpectralFreeze", sprintfk("bounds(246, 190, %i, 20)", 50)
+    cabbageSet kFreezeTrig, "BlurTime", sprintfk("alpha(%i)", 1)  
+else //hide blur controls
+    cabbageSet kFreezeTrig, "SpectralFreeze", sprintfk("bounds(246, 190, %i, 20)", 100)
+    cabbageSet kFreezeTrig, "BlurTime", sprintfk("alpha(%i)", 0)  
+endif
+
+imaxblurtime = 2.1
+//# SPECTRAL BLUR & FREEZE
+if kfreezeState > 1 && kfreezeState < 5 then
     fftinL pvsfreeze fanalyL, kFreezeAmp, kFreezeFreq
     fftinR pvsfreeze fanalyR, kFreezeAmp, kFreezeFreq
-else 
-    fftinL = fanalyL
+elseif  kfreezeState > 4 then
+    fftinL pvsblur fanalyL, chnget:k("BlurTime"), imaxblurtime
+    fftinR pvsblur fanalyR, chnget:k("BlurTime"), imaxblurtime
+else
+    fftinL = fanalyL    
     fftinR = fanalyR
 endif
 
