@@ -17,7 +17,7 @@ opcode loadeffects, 0, Si
               SeffectName cabbageGetFileNoExtension SelectedEffect ; get name of effect w/o extention - for instr reference
               ;turnoff2 9, 0, 1 
               ifract = ieffectselect/100      ; make fraction for when multiple instr 9s are called at once (on recall) 
-              Sinstr9 = sprintfk("i %f 0 1 %i \"%s\" \"%s\"", 9+ifract, ieffectselect, SelectedEffect, SeffectName)    
+              Sinstr9 = sprintfk("i %f 0 1 %i \"%s\"", 9+ifract, ieffectselect, SelectedEffect)    
               scoreline Sinstr9, 1
               
               ;event "i", 9+ifract, 0, 1, ieffectselect ; send 
@@ -32,6 +32,7 @@ instr 5
          Seffect2, kmenuchange2 cabbageGetValue "EffectList2"
          Seffect3, kmenuchange3 cabbageGetValue "EffectList3"
          Seffect4, kmenuchange4 cabbageGetValue "EffectList4"
+
          if kmenuchange1 > 0 then ; if the effect memu changes, load effect
              loadeffects Seffect1, 1 
          endif
@@ -59,8 +60,9 @@ endin
 instr 9
             ieffectSlot = p4 
             SeffectName = p5
-            SelectedEffectPath strcat gSEffectDir, SeffectName
-            SelectedEffectPath strcat SelectedEffectPath, ".orc"
+
+            SCsdPath chnget "CSD_PATH"
+            SelectedEffectPath sprintf "%s/%s%s.orc", SCsdPath, gSEffectDir, SeffectName
             ifract = ieffectSlot*0.1 ; use ieffectSlot to make a unique fractional number for each instance of the instrument
             prints "SeffectName = %s\n", SeffectName
             prints "EffectPath = %s\n", SelectedEffectPath

@@ -207,7 +207,7 @@ groupbox bounds(437,545,500,150), colour(0,0,0,0), lineThickness(0),outlineThick
 signaldisplay bounds(20, 360, 400, 70), displayType("spectrogram"), backgroundColour(20,20,20), zoom(-1), signalVariable("afftOutL"), skew(0.5)
 signaldisplay bounds(440, 360, 400, 70), displayType("spectrogram"), backgroundColour(20,20,20), zoom(-1), signalVariable("afftOutR"), skew(0.5)
 }
-;csoundoutput bounds(14, 198, 345, 172) channel("csoundoutput1"), fontColour(147, 210, 0)
+csoundoutput bounds(14, 198, 345, 172) channel("csoundoutput1"), fontColour(147, 210, 0)
 
 </Cabbage>
 <CsoundSynthesizer>
