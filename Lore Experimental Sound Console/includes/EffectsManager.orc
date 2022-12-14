@@ -106,3 +106,6 @@ endin
 
 instr 16, GhostEcho
 endin
+
+instr 17, Orbiter
+endin
