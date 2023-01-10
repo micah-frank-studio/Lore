@@ -12,13 +12,14 @@
 ; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
 
-form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes"), typeface("includes/Inconsolata-Regular.ttf")
+form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes"), typeface("includes/SupportFiles/Inconsolata-Regular.ttf")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define BUTTON2 fontColour:0("200,200,200,180"), fontColour:1("0,200,0,250"), outlineColour("200,200,200"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
-image bounds(0,0,970,1000) file("includes/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.27"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
+image bounds(0,0,970,1000) file("includes/SupportFiles/lore-bg.png")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.29"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
+
 
 image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
 image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0), alpha(0.5)
@@ -27,11 +28,12 @@ image bounds(440,100,400,75), channel("FBMatrixR"), colour(185,31,88,0), alpha(0
 image bounds(20,100,400,75), channel("attenMatrixL"), colour(200,200,0,0)
 image bounds(440,100,400,75), channel("attenMatrixR"), colour(100,100,200,0)
 
+
 label bounds(3000,23,200,15), fontColour(200,200,200), fontSize(12), text(""), channel("SliderValue"), colour(0,0,0,0), fontStyle("Regular")
 
 label bounds(240,23,200,15), fontColour(200,200,200), text("SET A SOURCE FILE --->"), alpha(0), channel("SampleWarning")
 
-groupbox bounds(440,0,400,70), colour(0,0,0,0), lineThickness(0),outlineThickness(0){
+groupbox bounds(440,0,400,100), colour(0,0,0,0), lineThickness(0),outlineThickness(0){
 
 button bounds(0, 20, 20, 20), latched(1), channel("InputMode"), text("F", "I") $BUTTON1, automatable(0)
 filebutton bounds (25, 20, 100, 20), populate("*.wav *.aif", "."), mode("file"), channel("File"), text("SOURCE") $BUTTON1, automatable(0)
@@ -70,8 +72,8 @@ groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
 
 }
 
-
-groupbox bounds(437,235,410,250), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
+// EFFECTS MODULES GROUP
+groupbox bounds(437,235,410,250), channel("EffectsModulesGroup"), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
     label bounds(5,0,400,16), align("left"), text("EFFECTS CHAIN ----------"), fontSize(15), fontStyle("Regular")
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls1"), text("") $GROUPBOX {
@@ -126,25 +128,51 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_4"), text("MACRO 6"), ra
 }
 optionbutton bounds(340, 0, 60, 20), latched(1), channel("EffectSelect"), colour:0(0, 0, 0, 200), items(" 1 >", " 2 >", " 3 >", " 4 >"), $BUTTON1
 
-label bounds(5,217,90,16), align("left"), text("MODULE CHAIN"), fontSize(12), fontStyle("Regular")
-combobox bounds(100, 215, 100, 20), items("Parallel","Spec > Grain","Grain > Spec"), channel("audioRouting"), value(1), automatable(0)
+
 
 
 } //End Effects Group
 
-button bounds(357, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), $BUTTON1, automatable(0)
 
-button bounds(777, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L") $BUTTON1, automatable(0)
+// Spectral Effects Control Group
+groupbox bounds(437,235,410,250), channel("SpectsGroup"), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), visible(0){
+button bounds(5, 0, 60, 20), latched(1), channel("Arp"), text("ARP") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0)
+hslider bounds(0, 25, 200, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1
+hslider bounds(0, 50, 200, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1
+label bounds(215,2,95,16), align("left"), text("SPECTRAL FREEZE"), fontSize(13), fontStyle("Regular")
+combobox bounds(320, 0, 80, 20), latched(1), channel("SpectralFreeze"), items("Off", "Amp", "Freq", "Amp/Freq", "Blur"), value(1), automatable(1)
+hslider bounds(210, 25, 200, 20), channel("BlurTime"), text("BLUR TIME"), range(0.005, 2, 0.8, 0.5, 0.001), automatable(1), alpha(0.5), active(0) $SLIDER1
 
-button bounds(100, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), $BUTTON1, automatable(0)
+}
+
+// ROUTING Group
+groupbox bounds(437,235,410,250), channel("RoutingGroup"), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), visible(0){
+
+label bounds(5,2,90,16), align("left"), text("MODULE CHAIN"), fontSize(12), fontStyle("Regular")
+combobox bounds(100, 0, 100, 20), items("Parallel","Spec > Grain","Grain > Spec"), channel("audioRouting"), value(1), automatable(0)
+label bounds(5,27,90,16), align("left"), text("STEREO MODE"), fontSize(12), fontStyle("Regular")
+image bounds(210, 0, 150, 90), channel("BinXYPad"), colour(30,30,30)
+image bounds(300, 25, 20, 20), channel("BinPan"), colour(250,250,250), shape("ellipse")
+combobox bounds(100, 25, 100, 20), channel("StereoMode"), text("Left/Right", "Binaural"), colour(72,72,72,0), fontColour (255, 255, 255),value (1)
+label bounds(205,90,90,16), align("left"), text("-90°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
+label bounds(350,90,50,16), align("left"), text("450°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
+label bounds(278,90,50,16), align("left"), text("180°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
+label bounds(365,75,50,16), align("left"), text("-40°"), fontSize(12), fontStyle("Regular"), fontColour(0,200,200)
+label bounds(365,0,50,16), align("left"), text("90°"), fontSize(12), fontStyle("Regular"), fontColour(0,200,200)
+
+}
+
+button bounds(85, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), $BUTTON1, automatable(0)
+
+button bounds(505, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L") $BUTTON1, automatable(0)
+
+button bounds(150, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), $BUTTON1, automatable(0)
 ;combobox bounds(168, 190, 70, 20), items("Hamming", "von Hamm", "Kaiser"), channel("WindowType"), automatable(0)
-combobox bounds(172, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0)
-hslider bounds(302, 190, 50, 20), channel("BlurTime"), text(""), range(0.005, 2, 0.8, 0.5, 0.001), alpha(0), automatable(1) $SLIDER1
-combobox bounds(246, 190, 100, 20), latched(1), channel("SpectralFreeze"), items("No Freeze", "Freeze Amp", "Freeze Freq", "Freeze A/F", "Blur"), value(1), automatable(1)
+combobox bounds(215, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0)
 
-button bounds(520, 190, 60, 20), latched(1), channel("Arp"), text("ARP"), $BUTTON2, automatable(0)
-hslider bounds(590, 186, 160, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0), $SLIDER1
-hslider bounds(590, 206, 160, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0) $SLIDER1
+button bounds(647, 190, 60, 20), latched(1), channel("Page_Spects"), text("FUNCT") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(0)
+button bounds(712, 190, 60, 20), latched(1), channel("Page_Modules"), text("EFFECTS") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(1)
+button bounds(777, 190, 60, 20), latched(1), channel("Page_Routing"), text("DIRECT") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(0) 
 
 
 optionbutton bounds(20, 190, 60, 20), latched(1), channel("TimeFeedModeL"), items("FILTER", "TIME", "FBACK") $BUTTON1, automatable(0)
@@ -231,9 +259,9 @@ giEffectDefault = 1 ; load effect defaults
 gieffectchannels = 10
 zakinit gieffectchannels, 2
 
-#include "includes/ImpulseTables.orc"
+#include "includes/SupportFiles/ImpulseTables.orc"
 
-#include "includes/EffectsManager.orc"
+#include "includes/SupportFiles/EffectsManager.orc"
 
 massign 0, 0
 
@@ -451,6 +479,71 @@ opcode modroute, kkkkkkkk, kkkkkk ; only 7 of 8 are used. mod intended for arp i
 
 endop
 
+//# XY Pad Opcode
+opcode XYPad, kk, SS
+SPadName, SControl xin
+iXYPadBounds[] cabbageGet sprintfk("%s", SPadName), "bounds"
+    iXmargin = 437 ;offsets because of Groupbox
+    iYmargin = 235
+    iPadLeft = iXYPadBounds[0] + iXmargin
+    iPadTop = iXYPadBounds[1] + iYmargin
+    iPadWidth = iXYPadBounds[2]
+    iPadHeight = iXYPadBounds[3]
+    iPadCentreX = iPadLeft + iPadWidth/2
+    iPadCentreY = iPadTop + iPadHeight/2
+    iBallSize = 20
+    iBallBounds[] fillarray iPadWidth/2-iBallSize/2, iPadHeight/2-iBallSize/2, 30, 30
+    iballXYpos[] cabbageGet SControl, "bounds"
+    kCurrentX init iballXYpos[0] ;initialize x,y vals to actual ball poaition
+    kCurrentY init iballXYpos[1]
+    kBallSize init iBallSize  
+    kXDown, kYDown, kXUp, kYUp init 0
+    kIncrY, kIncrX init 0
+    
+   
+        kMouseLeftDown chnget "MOUSE_DOWN_LEFT"
+        kMouseRightDown chnget "MOUSE_DOWN_RIGHT"        
+        kXPos chnget "MOUSE_X"
+        kYPos chnget "MOUSE_Y"
+           
+    kAutomation init 0
+    iSensitivity = 0.4
+    kDistanceFromCentre init 0
+    				
+   if kMouseLeftDown==1 || kMouseRightDown == 1 && kXPos > iPadLeft && kXPos < iPadLeft + iPadWidth && kYPos > iPadTop && kYPos < iPadHeight + iPadTop then 
+        kBallX limit kXPos, iPadLeft+kBallSize/2, iPadLeft+iXYPadBounds[2]-kBallSize/2
+        kBallY limit kYPos, iPadTop+kBallSize/2, iPadTop+iPadHeight-kBallSize/2
+        kCurrentX = kBallX
+        kCurrentY = kBallY
+        cabbageSet 1, SControl, "bounds", kBallX-kBallSize/2-iXmargin, kBallY-kBallSize/2-iYmargin, kBallSize, kBallSize
+        kDistanceFromCentre = 1 - (sqrt(pow:k(iPadCentreX-kBallX, 2)+pow:k(iPadCentreY-kBallY, 2)))/(iPadWidth/2)
+        kAutomation = 0
+   endif  
+
+     if changed(kMouseRightDown) == 1 then
+        if kMouseRightDown == 1 then
+            kXDown = kXPos
+            kYDown = kYPos
+        else
+            kVel = sqrt(pow:k(kXDown-kXPos, 2)+pow:k(kYDown-kYPos, 2))/iPadWidth
+            kAutomation = 1
+            kIncrX = (kXPos-kXDown)*kVel*iSensitivity
+            kIncrY = (kYPos-kYDown)*kVel*iSensitivity
+            kXUp = kXPos-iBallSize/2
+            kYUp = kYPos-iBallSize/2
+        endif
+    endif
+
+    
+    kOutX = (kCurrentX-iPadLeft-iBallSize/2)/(iPadWidth-iBallSize)
+    kOutY = (kCurrentY-iPadTop-iBallSize/2)/(iPadHeight-iBallSize)
+
+    xout tonek(kOutX, 10), tonek(kOutY, 10)  
+    
+    cabbageSetValue "x", kOutX
+    cabbageSetValue "y", kOutY
+    ;cabbageSet metro(50), SControl, "alpha",  kOutX*0.1+(1-kOutY*0.5) ;, 255-kOutY
+endop 
 
 opcode renderFile, 0, aaS
     setksmps 1
@@ -710,8 +803,36 @@ gkStopButton, kTrigStop cabbageGetValue "StopMode"
     cabbageSet "EffectList2", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir)
     cabbageSet "EffectList3", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir)
     cabbageSet "EffectList4", sprintf("populate(\"*.orc\", \"%s\")", gSEffectDir)
-endin
 
+
+//# Module Window Management
+
+kmodPageVal, kmodPageChanged cabbageGet "Page_Modules"
+kroutePageVal, kroutePageChanged cabbageGet "Page_Routing"
+karpPageVal, karpPageChanged cabbageGet "Page_Spects"
+
+    if kmodPageChanged > 0 && kmodPageVal > 0 then
+        cabbageSet kmodPageChanged, "SpectsGroup", "visible(0)"
+        cabbageSet kmodPageChanged, "RoutingGroup", "visible(0)"
+        cabbageSet kmodPageChanged, "EffectsModulesGroup", "visible(1)"            
+        cabbageSetValue "Page_Spects", 0, kmodPageChanged
+        cabbageSetValue "Page_Routing", 0, kmodPageChanged
+    endif
+    if karpPageChanged > 0 && karpPageVal > 0 then
+        cabbageSet karpPageChanged, "SpectsGroup", "visible(1)"
+        cabbageSet karpPageChanged, "RoutingGroup", "visible(0)"
+        cabbageSet karpPageChanged, "EffectsModulesGroup", "visible(0)"   
+        cabbageSetValue "Page_Routing", 0, karpPageChanged
+        cabbageSetValue "Page_Modules", 0, karpPageChanged   
+    endif
+    if kroutePageChanged > 0 && kroutePageVal > 0 then
+        cabbageSet kroutePageChanged, "SpectsGroup", "visible(0)"
+        cabbageSet kroutePageChanged, "RoutingGroup", "visible(1)"
+        cabbageSet kroutePageChanged, "EffectsModulesGroup", "visible(0)"   
+        cabbageSetValue "Page_Spects", 0, kroutePageChanged
+        cabbageSetValue "Page_Modules", 0, kroutePageChanged   
+    endif
+ endin   
 
 instr 2
 
@@ -748,7 +869,6 @@ ifbR ftgentmp 110, 0, gifftsize, -2, 0
     mouseListen 109, "FBMatrixR"
 
 
-
 kinitTables init 0
 if kinitTables < 1 then
     updateTable 102, "attenMatrixR"
@@ -782,8 +902,8 @@ if chnget:k("InputMode") < 1 then ;if disk stream mode
     ainputL = aDiskL
     ainputR = aDiskR
 else
-    ainputL = aInputL*chnget:k("Gain")
-    ainputR = aInputR*chnget:k("Gain")
+    ainputL = aInputL
+    ainputR = aInputR
 endif
 
 ainL = ainputL*chnget:k("Gain")
@@ -799,8 +919,8 @@ ainR = ainputR*chnget:k("Gain")
 aSpecInLFilt butterhp aSpecInL, 450
 aSpecInRFilt butterhp aSpecInR, 450
 
-fanalyL  pvsanal   aSpecInL, gifftsize, ioverlap, iwinsize, 0
-fanalyR  pvsanal   aSpecInR, gifftsize, ioverlap, iwinsize, 0
+fanalyL  pvsanal   aSpecInL*2, gifftsize, ioverlap, iwinsize, 0
+fanalyR  pvsanal   aSpecInR*2, gifftsize, ioverlap, iwinsize, 0
 
 // Spectral Freeze Logic
 ;kfreezeState = chnget:k("SpectralFreeze")
@@ -817,31 +937,26 @@ elseif kfreezeState == 3 then
 elseif kfreezeState == 4 then
     kFreezeAmp = 1
     kFreezeFreq = 1
-elseif kfreezeState == 5 then //spectral blur
-    kFreezeAmp = 0
-    kFreezeFreq = 0
 endif  
 
-if kfreezeState > 4 then //show blur controls
-    cabbageSet kFreezeTrig, "SpectralFreeze", sprintfk("bounds(246, 190, %i, 20)", 50)
-    cabbageSet kFreezeTrig, "BlurTime", sprintfk("alpha(%i)", 1)  
-else //hide blur controls
-    cabbageSet kFreezeTrig, "SpectralFreeze", sprintfk("bounds(246, 190, %i, 20)", 100)
-    cabbageSet kFreezeTrig, "BlurTime", sprintfk("alpha(%i)", 0)  
-endif
 
 imaxblurtime = 2.1
+
 //# SPECTRAL BLUR & FREEZE
 if kfreezeState > 1 && kfreezeState < 5 then
     fftinL pvsfreeze fanalyL, kFreezeAmp, kFreezeFreq
     fftinR pvsfreeze fanalyR, kFreezeAmp, kFreezeFreq
+    cabbageSet kFreezeTrig, "BlurTime", "alpha(0.5), active(0)"
 elseif  kfreezeState > 4 then
     fftinL pvsblur fanalyL, chnget:k("BlurTime"), imaxblurtime
     fftinR pvsblur fanalyR, chnget:k("BlurTime"), imaxblurtime
+    cabbageSet kFreezeTrig, "BlurTime", "alpha(1), active(1)"
 else
     fftinL = fanalyL    
     fftinR = fanalyR
+    cabbageSet kFreezeTrig, "BlurTime", "alpha(0.5), active(0)"
 endif
+
 
 //# SPECTRAL MODULATION
     kSpectralSplineMode chnget "SpectralModMode"
@@ -902,12 +1017,12 @@ karpState, kArpTrig cabbageGet "Arp"
 if karpState > 0 then
     fArpsigL pvsarp fftinL, kbinLFO+0.01, 0.9, 10
     fmaskL pvsmaska fArpsigL, gimaskL, 1-kAttenModSumL
-    cabbageSet kArpTrig, "ArpDepth", "alpha(1)"
-    cabbageSet kArpTrig, "ArpSpeed", "alpha(1)"
+    cabbageSet kArpTrig, "ArpDepth", "alpha(1), active(1)"
+    cabbageSet kArpTrig, "ArpSpeed", "alpha(1), active(1)"
 else 
     fmaskL pvsmaska fftinL, gimaskL, 1-kAttenModSumL
-    cabbageSet kArpTrig, "ArpDepth", "alpha(0)"
-    cabbageSet kArpTrig, "ArpSpeed", "alpha(0)"
+    cabbageSet kArpTrig, "ArpDepth", "alpha(0.5), active(0)"
+    cabbageSet kArpTrig, "ArpSpeed", "alpha(0.5), active(0)"
 endif
 
 
@@ -1048,8 +1163,36 @@ adryR chnget "drymixR"
 
     zacl 9,10
 
-amixL ntrpol adryL, aefxL, keffectsmix
-amixR ntrpol adryR, aefxR, keffectsmix
+
+
+gkX, gkY XYPad "BinXYPad", "BinPan"
+kazim scale gkX, 450, -90
+kalt scale gkY, -40, 90
+
+aEffectMixL ntrpol adryL, aefxL, keffectsmix
+aEffectMixR ntrpol adryR, aefxR, keffectsmix
+
+
+if (gisr = 44100) then
+SfileL = "includes/HRTF/hrtf-44100-left.dat"
+SfileR = "includes/HRTF/hrtf-44100-right.dat"
+elseif (gisr = 48000) then
+SfileL = "includes/HRTF/hrtf-48000-left.dat"
+SfileR = "includes/HRTF/hrtf-48000-right.dat"
+elseif (gisr = 96000) then
+SfileL = "includes/HRTF/hrtf-96000-left.dat"
+SfileR = "includes/HRTF/hrtf-96000-right.dat"
+endif
+
+ahrtfL, ahrtfR hrtfmove2 aEffectMixL+aEffectMixR, kazim, kalt, SfileL, SfileR, 4, 9, gisr
+
+if chnget:k("StereoMode") == 1 then
+amixL = aEffectMixL
+amixR = aEffectMixR
+else
+amixL = ahrtfL
+amixR = ahrtfR
+endif
 
 koutput chnget "Output"
 
