@@ -12,13 +12,13 @@
 ; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
 
-form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes"), typeface("includes/SupportFiles/Inconsolata-Regular.ttf")
+form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes") ;, typeface("includes/SupportFiles/Inconsolata-Regular.ttf")
 #define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
 #define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define BUTTON2 fontColour:0("200,200,200,180"), fontColour:1("0,200,0,250"), outlineColour("200,200,200"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
 image bounds(0,0,970,1000) file("includes/SupportFiles/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.29"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.3"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
 
 
 image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
@@ -42,7 +42,7 @@ button bounds(3000, 20, 60, 20), latched(0), channel("StopMode"), text("STOP") $
 filebutton bounds(195, 20, 60, 20), latched(0), mode("save"), text("RENDER"), populate("*.wav", "."), channel("RecordMode"), colour(0,0,0,0) $BUTTON1, automatable(0)
 button bounds(260, 20, 60, 20), latched(0), text("HELP"), channel("HelpButtonText"), $BUTTON1, automatable(0)
 infobutton bounds(260, 20, 60, 20), latched(0), text(""), channel("HelpButton"), file("https://ec2.puremagnetik.com/LoreManual.html"), colour("0,0,0,0"), automatable(0), alpha(0)
-hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN"), $SLIDER1
+hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN"), $SLIDER1, automatable(0)
 
 }
 
@@ -54,10 +54,10 @@ groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("SpectralLFO"), visible(1) {
     hslider bounds(0,30, 200, 20), channel("SpectralModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(0,55, 200, 20), channel("SpectralModAmount1"), range(0,1,0.2,0.5,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape1"), value(1)
+    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape1"), value(1), _scrambleCombo(1)
     hslider bounds(210,30, 200, 20), channel("SpectralModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("SpectralModAmount2"), range(0,1,0.2,0.5,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2"), value(6)
+    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2"), value(6), _scrambleCombo(1)
 
     }
     //Spectral Spline Panel
@@ -67,8 +67,8 @@ groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
     hslider bounds(210,30, 200, 20), channel("SpectralSplineRange2"), range(0,1,0.2,0.5,0.001), text ("RANGE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("SpectralSplineSpeed2"), range(0,10,3,0.5,0.001), text ("SPEED") $SLIDER1
     }
-    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1"), value(1)
-    combobox bounds(210, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2"), value(2)
+    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1"), value(1), _scrambleCombo(1)
+    combobox bounds(210, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2"), value(2), _scrambleCombo(1)
 
 }
 
@@ -137,10 +137,10 @@ optionbutton bounds(340, 0, 60, 20), latched(1), channel("EffectSelect"), colour
 // Spectral Effects Control Group
 groupbox bounds(437,235,410,250), channel("SpectsGroup"), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), visible(0){
 button bounds(5, 0, 60, 20), latched(1), channel("Arp"), text("ARP") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0)
-hslider bounds(0, 25, 200, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1
-hslider bounds(0, 50, 200, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1
+hslider bounds(0, 25, 200, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1, _scrambleCombo(1)
+hslider bounds(0, 50, 200, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1, _scrambleCombo(1)
 label bounds(215,2,95,16), align("left"), text("SPECTRAL FREEZE"), fontSize(13), fontStyle("Regular")
-combobox bounds(320, 0, 80, 20), latched(1), channel("SpectralFreeze"), items("Off", "Amp", "Freq", "Amp/Freq", "Blur"), value(1), automatable(1)
+combobox bounds(320, 0, 80, 20), latched(1), channel("SpectralFreeze"), items("Off", "Amp", "Freq", "Amp/Freq", "Blur"), value(1), automatable(1), _scrambleCombo(1)
 hslider bounds(210, 25, 200, 20), channel("BlurTime"), text("BLUR TIME"), range(0.005, 2, 0.8, 0.5, 0.001), automatable(1), alpha(0.5), active(0) $SLIDER1
 
 }
@@ -153,7 +153,7 @@ combobox bounds(100, 0, 100, 20), items("Parallel","Spec > Grain","Grain > Spec"
 label bounds(5,27,90,16), align("left"), text("STEREO MODE"), fontSize(12), fontStyle("Regular")
 image bounds(210, 0, 150, 90), channel("BinXYPad"), colour(30,30,30)
 image bounds(300, 25, 20, 20), channel("BinPan"), colour(250,250,250), shape("ellipse")
-combobox bounds(100, 25, 100, 20), channel("StereoMode"), text("Left/Right", "Binaural"), colour(72,72,72,0), fontColour (255, 255, 255),value (1)
+combobox bounds(100, 25, 100, 20), channel("StereoMode"), text("Left/Right", "Binaural"), colour(72,72,72,0), fontColour (255, 255, 255),value (1), automatable(0)
 label bounds(205,90,90,16), align("left"), text("-90°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
 label bounds(350,90,50,16), align("left"), text("450°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
 label bounds(278,90,50,16), align("left"), text("180°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
@@ -167,8 +167,10 @@ button bounds(85, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), $B
 button bounds(505, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L") $BUTTON1, automatable(0)
 
 button bounds(150, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), $BUTTON1, automatable(0)
+button bounds(215, 190, 60, 20), latched(0), channel("Jumble"), text("JUMBLE") $BUTTON1, automatable(0), value(0)
+
 ;combobox bounds(168, 190, 70, 20), items("Hamming", "von Hamm", "Kaiser"), channel("WindowType"), automatable(0)
-combobox bounds(215, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0)
+combobox bounds(280, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0), _scrambleCombo(1)
 
 button bounds(647, 190, 60, 20), latched(1), channel("Page_Spects"), text("FUNCT") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(0)
 button bounds(712, 190, 60, 20), latched(1), channel("Page_Modules"), text("EFFECTS") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(1)
@@ -189,7 +191,7 @@ hslider bounds(210, 55, 200, 20), channel("Size1"), text("SIZE"), range(0.01, 1,
 hslider bounds(420, 30, 200, 20), channel("Start"), text("START"), range(0, 1, 0, 1, 0.001) $SLIDER1
 hslider bounds(420, 55, 200, 20), channel("End"), text("END"), range(0, 1, 1, 1, 0.001) $SLIDER1
 hslider bounds(630, 30, 200, 20), channel("Filter1"), text("FREQ"), range(10, 9000, 4000, 0.5, 0.001) $SLIDER1
-combobox bounds(633, 55, 70, 20), channel("Type1"), items("LPF", "HPF"), value(1)
+combobox bounds(633, 55, 70, 20), channel("Type1"), items("LPF", "HPF"), value(1), _scrambleCombo(1)
 }
 
 
@@ -201,10 +203,10 @@ groupbox bounds(16,545,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("GranularLFO"), visible(1) {
     hslider bounds(0,30, 200, 20), channel("GrainModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(0,55, 200, 20), channel("GrainModAmount1"), range(0,1,0.3,1,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape1"), value(2)
+    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape1"), value(2), _scrambleCombo(1)
     hslider bounds(210,30, 200, 20), channel("GrainModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("GrainModAmount2"), range(0,1,0,1,0.001), text ("AMOUNT"), value(0.3), $SLIDER1
-    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2"), value(6)
+    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2"), value(6), _scrambleCombo(1)
         }
     // Granular Spline Panel
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("GranularSpline"), visible(0) {
@@ -213,8 +215,8 @@ groupbox bounds(16,545,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
     hslider bounds(210,30, 200, 20), channel("GranularSplineRange2"), range(0,1,0.1,1,0.001), text ("RANGE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("GranularSplineSpeed2"), range(0,10,3,0.5,0.001), text ("SPEED") $SLIDER1
     }
-    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1"), value(3)
-    combobox bounds(210, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2"), value(2)
+    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1"), value(3), _scrambleCombo(1)
+    combobox bounds(210, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2"), value(2), _scrambleCombo(1)
 
 }
 
@@ -227,7 +229,7 @@ groupbox bounds(437,545,500,150), colour(0,0,0,0), lineThickness(0),outlineThick
     hslider bounds(0,80, 200, 20), channel("GrainMix"), range(0,1,0.5,1), text ("GRAIN") $SLIDER1
     hslider bounds(210,30, 200, 20), channel("EffectsSend"), text("EFFECTS SEND"), range(0, 1, 0.2, 0.5, 0.001) $SLIDER1
     hslider bounds(210,55, 200, 20), channel("EffectsMix"), text("EFFECTS MIX"), range(0, 1, 0.25, 1, 0.001) $SLIDER1
-    hslider bounds(210,80, 200, 20), channel("Output"), range(0,2,0.5,0.7,0.001), text ("OUTPUT") $SLIDER1
+    hslider bounds(210,80, 200, 20), channel("Output"), range(0,2,0.5,0.7,0.001), text ("OUTPUT") $SLIDER1, automatable(0)
 
 }
 
@@ -832,7 +834,47 @@ karpPageVal, karpPageChanged cabbageGet "Page_Spects"
         cabbageSetValue "Page_Spects", 0, kroutePageChanged
         cabbageSetValue "Page_Modules", 0, kroutePageChanged   
     endif
- endin   
+
+kscramidx init 50000
+kscramComboidx init 0
+SscramCombo[] init 100
+ScramChnNames[] cabbageGetWidgetChannels "type(\"hslider\"), automatable(1)"
+ScramComboNames[] cabbageGetWidgetChannels "type(\"combobox\"), _scrambleCombo(1)"
+    //check array sizes
+        iscramLen lenarray ScramChnNames
+        iscramComboLen lenarray ScramComboNames
+
+// Jumble — Randomize everything
+kScramVal, kScram cabbageGet "Jumble" 
+    if kScram > 0 && kScramVal > 0 then      
+        jumbleSliders:
+        if kscramidx < iscramLen then
+            //get range of control
+            kscramRange[] cabbageGet ScramChnNames[kscramidx], "range"
+            //create new random value within range
+            knewScramVal=random(kscramRange[0], kscramRange[1])
+            cabbageSetValue ScramChnNames[kscramidx], knewScramVal, kScram
+            kscramidx += 1
+            kgoto jumbleSliders
+        endif
+        //After sliders are jumbled, operate comboboxes
+        kscramidx = 0
+        kscramComboidx = 0
+        kgoto scrambleCombo
+    endif   
+       
+    scrambleCombo:
+           if kscramComboidx < iscramComboLen then
+                    SscramRange[] cabbageGet ScramComboNames[kscramComboidx], "text"
+                    //get range of control
+                    kScramComboItems lenarray SscramRange
+                    //create new random value within range
+                    knewComboVal=round(random(1, kScramComboItems))
+                    cabbageSetValue ScramComboNames[kscramComboidx], knewComboVal, 1
+                    kscramComboidx += 1
+                    kgoto scrambleCombo 
+            endif
+endin   
 
 instr 2
 
