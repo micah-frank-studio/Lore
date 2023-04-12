@@ -12,21 +12,23 @@
 ; Impulse Response Files by OpenAir Library, https://www.openair.hosted.york.ac.uk, University of York and licensed under Attribution 4.0 International (CC BY 4.0).
 
 
-form caption("Lore") size(860, 675), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes") ;, typeface("includes/SupportFiles/Inconsolata-Regular.ttf")
-#define SLIDER1 trackerColour(255,255,255), textColour(255,255,255,200), trackerBackgroundColour(250,250,250,808), trackerThickness(0.05), popupText(0), _isSlider("yes")
-#define BUTTON1 fontColour:0("250,250,250,200"), fontColour:1("250,250,250"), outlineColour("250,250,250"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
-#define BUTTON2 fontColour:0("200,200,200,180"), fontColour:1("0,200,0,250"), outlineColour("200,200,200"), colour:0(0,0,0), outlineThickness(2), corners(0), automatable(1)
+form caption("Lore") size(860, 675), channel("form"), colour(0,0,0), guiMode("queue"), pluginId("2084"), openGL(1), opcodeDir("."), bundle("./includes"), typeface("includes/SupportFiles/SourceSansPro-Regular.ttf")
+image bounds(0,0,860,675), channel("bgcolor"), colour(0,0,0)
+#define SLIDER1 trackerColour(50,255,255), textColour(255,255,255,200), colour(250,250,250), trackerBackgroundColour(250,250,250,40), trackerThickness(0.05), popupText(0), _isSlider("yes")
+#define BUTTON1 fontColour:0(250,250,250,200), fontColour:1(250,250,250), outlineColour(250,250,250), colour:0(0,0,0), outlineThickness(1), corners(0), automatable(1), _abutton(1)
+#define LABEL fontStyle("Regular")
 #define GROUPBOX lineThickness(0.5), outlineThickness(0.5), colour("5,500,0,0")
-image bounds(0,0,970,1000) file("includes/SupportFiles/lore-bg.png")
-label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.3"), fontSize(11), align("left"), channel("VersionNumber"), fontStyle("Regular")
+label bounds(20,-20,300,100), fontColour(200,200,200), text("LORE"), fontSize(40), align("top"), align("left"), channel("LoreTitle") $LABEL
+label bounds(20,5,300,100), fontColour(200,200,200), text("EXPERIMENTAL SOUND CONSOLE"), fontSize(18), align("top"), align("left"), channel("LoreDesc") $LABEL
+label bounds(100,32,300,15), fontColour(200,200,200), text("Ver 1.0.31"), fontSize(14), align("left"), channel("VersionNumber") $LABEL
 
 
-image bounds(20,101,400,75), channel("DelMatrixL"), colour(8,79,200,0), alpha(0.5)
-image bounds(440,100,400,75), channel("DelMatrixR"), colour(0,200,200,0), alpha(0.5)
-image bounds(20,100,400,75), channel("FBMatrixL"), colour(245,80,80,0), alpha(0.5)
-image bounds(440,100,400,75), channel("FBMatrixR"), colour(185,31,88,0), alpha(0.5)
-image bounds(20,100,400,75), channel("attenMatrixL"), colour(200,200,0,0)
-image bounds(440,100,400,75), channel("attenMatrixR"), colour(100,100,200,0)
+image bounds(20,101,400,75), channel("DelMatrixL"), colour(66,97,238,0), alpha(0.4)
+image bounds(440,100,400,75), channel("DelMatrixR"), colour(255,0,84,0), alpha(0.4)
+image bounds(20,100,400,75), channel("FBMatrixL"), colour(246,126,0,0), alpha(0.4)
+image bounds(440,100,400,75), channel("FBMatrixR"), colour(254,112,2,0), alpha(0.4)
+image bounds(20,100,400,75), channel("attenMatrixL"), colour(26,211,176,0)
+image bounds(440,100,400,75), channel("attenMatrixR"), colour(0,150,254,0)
 
 
 label bounds(3000,23,200,15), fontColour(200,200,200), fontSize(12), text(""), channel("SliderValue"), colour(0,0,0,0), fontStyle("Regular")
@@ -35,29 +37,31 @@ label bounds(240,23,200,15), fontColour(200,200,200), text("SET A SOURCE FILE --
 
 groupbox bounds(440,0,400,100), colour(0,0,0,0), lineThickness(0),outlineThickness(0){
 
-button bounds(0, 20, 20, 20), latched(1), channel("InputMode"), text("F", "I") $BUTTON1, automatable(0)
-filebutton bounds (25, 20, 100, 20), populate("*.wav *.aif", "."), mode("file"), channel("File"), text("SOURCE") $BUTTON1, automatable(0)
-button bounds(130, 20, 60, 20), latched(1), channel("PlayMode"), text("PLAY", "PLAY") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0)
-button bounds(3000, 20, 60, 20), latched(0), channel("StopMode"), text("STOP") $BUTTON1 outlineColour(185,31,88), fontColour:0(250,250,250), fontColour:1(250,250,250), automatable(0)
-filebutton bounds(195, 20, 60, 20), latched(0), mode("save"), text("RENDER"), populate("*.wav", "."), channel("RecordMode"), colour(0,0,0,0) $BUTTON1, automatable(0)
-button bounds(260, 20, 60, 20), latched(0), text("HELP"), channel("HelpButtonText"), $BUTTON1, automatable(0)
+button bounds(0, 20, 20, 20), latched(1), channel("InputMode"), text("F", "I"), automatable(0), $BUTTON1
+filebutton bounds (25, 20, 100, 20), populate("*.wav *.aif", "."), mode("file"), channel("File"), text("SOURCE"), automatable(0), $BUTTON1
+button bounds(130, 20, 60, 20), latched(1), channel("PlayMode"), text("PLAY", "PLAY"), automatable(0) $BUTTON1
+button bounds(3000, 20, 60, 20), latched(0), channel("StopMode"), text("STOP") outlineColour(185,31,88), fontColour:0(250,250,250), fontColour:1(250,250,250), automatable(0), $BUTTON1
+filebutton bounds(195, 20, 60, 20), latched(0), mode("save"), text("RENDER"), populate("*.wav", "."), channel("RecordMode"), automatable(0) $BUTTON1
+button bounds(260, 20, 60, 20), latched(0), text("HELP"), channel("HelpButtonText"), automatable(0) $BUTTON1
 infobutton bounds(260, 20, 60, 20), latched(0), text(""), channel("HelpButton"), file("https://ec2.puremagnetik.com/LoreManual.html"), colour("0,0,0,0"), automatable(0), alpha(0)
+button bounds(325, 20, 20, 20), latched(1), text(""), channel("LightDarkMode"), automatable(0),  colour:1(0,0,0), colour:0(200,200,200), value(0), corners(0)
+combobox bounds(350, 20, 80, 20), mode("resize"), channel("zoomMode"), value(3), automatable(0) _combox(1)
 hslider bounds(0,50,248, 20), channel("Gain"), range(0,2,1,1), text ("INPUT GAIN"), $SLIDER1, automatable(0)
 
 }
 
 groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("SPECTRAL MODULATIONS -------------------------"), fontSize(15), fontStyle("Regular")
+    label bounds(5,0,400,16), align("left"), text("SPECTRAL MODULATIONS ------------------------------------------------------------------------------------"), fontSize(15), fontStyle("Regular")
 
-    button bounds(342, 0, 60, 18), latched(1), channel("SpectralModMode"), text("LFO","SPLINE"), $BUTTON1, automatable(0)
+    button bounds(342, 0, 60, 18), latched(1), channel("SpectralModMode"), text("LFO","SPLINE"), automatable(0), $BUTTON1
     //Spectral LFO PANEL
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("SpectralLFO"), visible(1) {
     hslider bounds(0,30, 200, 20), channel("SpectralModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(0,55, 200, 20), channel("SpectralModAmount1"), range(0,1,0.2,0.5,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape1"), value(1), _scrambleCombo(1)
+    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape1"), value(1), _scrambleCombo(1), _combox(1)
     hslider bounds(210,30, 200, 20), channel("SpectralModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("SpectralModAmount2"), range(0,1,0.2,0.5,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2"), value(6), _scrambleCombo(1)
+    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("SpectralLFOShape2"), value(6), _scrambleCombo(1), _combox(1)
 
     }
     //Spectral Spline Panel
@@ -67,19 +71,19 @@ groupbox bounds(16,235,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
     hslider bounds(210,30, 200, 20), channel("SpectralSplineRange2"), range(0,1,0.2,0.5,0.001), text ("RANGE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("SpectralSplineSpeed2"), range(0,10,3,0.5,0.001), text ("SPEED") $SLIDER1
     }
-    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1"), value(1), _scrambleCombo(1)
-    combobox bounds(210, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2"), value(2), _scrambleCombo(1)
+    combobox bounds(0, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest1"), value(1), _scrambleCombo(1), _combox(1)
+    combobox bounds(210, 88, 100, 20), items("Filter L", "Filter R", "Filter L/R", "Time L", "Time R", "Time L/R", "Feedback L", "Feedback R", "Feedback L/R"), channel("SpectralLFODest2"), value(2), _scrambleCombo(1), _combox(1)
 
 }
 
 // EFFECTS MODULES GROUP
 groupbox bounds(437,235,410,250), channel("EffectsModulesGroup"), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("EFFECTS CHAIN ----------"), fontSize(15), fontStyle("Regular")
+    label bounds(5,0,400,16), align("left"), text("EFFECTS CHAIN ----------------------------------------"), fontSize(15), fontStyle("Regular")
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls1"), text("") $GROUPBOX {
-image bounds(183, 0, 20, 20) channel("Effect_Icon1")
-combobox bounds(220, 0, 100, 20), channel("EffectList1"), channelType("string"), value("Empty") $EFFECTLIST
-combobox bounds(0, 30, 140, 20), channel("EffectCombo1_1"), visible(0)
+;image bounds(183, 0, 20, 20) channel("Effect_Icon1")
+combobox bounds(220, 0, 100, 20), channel("EffectList1"), channelType("string"), value("Empty") $EFFECTLIST, _combox(1)
+combobox bounds(0, 30, 140, 20), channel("EffectCombo1_1"), visible(0), _combox(1)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_1"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_1"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("EffectMacro3_1"), text("MACRO 3"), range(0, 1, 0.1, 1, 0.001)  $SLIDER1
@@ -90,9 +94,9 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_1"), text("MACRO 6"), ra
 }
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls2"), text("") visible(0) $GROUPBOX {
-image bounds(183, 0, 20, 20) channel("Effect_Icon2")
-combobox bounds(220, 0, 100, 20) channel("EffectList2"), channelType("string"), value("Empty") $EFFECTLIST
-combobox bounds(0, 30, 140, 20), channel("EffectCombo1_2"), visible(0)
+;image bounds(183, 0, 20, 20) channel("Effect_Icon2")
+combobox bounds(220, 0, 100, 20) channel("EffectList2"), channelType("string"), value("Empty") $EFFECTLIST, _combox(1)
+combobox bounds(0, 30, 140, 20), channel("EffectCombo1_2"), visible(0), _combox(1)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_2"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_2"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("EffectMacro3_2"), text("MACRO 3"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
@@ -102,9 +106,9 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_2"), text("MACRO 6"), ra
 }
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls3"), text("") visible(0) $GROUPBOX {
-image bounds(183, 0, 20, 20) channel("Effect_Icon3")
-combobox bounds(220, 0, 100, 20) channel("EffectList3"), channelType("string"), value("Empty") $EFFECTLIST
-combobox bounds(0, 30, 140, 20), channel("EffectCombo1_3"), visible(0)
+;image bounds(183, 0, 20, 20) channel("Effect_Icon3")
+combobox bounds(220, 0, 100, 20) channel("EffectList3"), channelType("string"), value("Empty") $EFFECTLIST, _combox(1)
+combobox bounds(0, 30, 140, 20), channel("EffectCombo1_3"), visible(0), _combox(1)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_3"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001)  $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_3"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001)  $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("EffectMacro3_3"), text("MACRO 3"), range(0, 1, 0.1, 1, 0.001)  $SLIDER1
@@ -115,9 +119,9 @@ hslider bounds(210, 80, 200, 20), channel("EffectMacro6_3"), text("MACRO 6"), ra
 }
 
 groupbox bounds(0, 0, 410, 202) channel("EffectsControls4"), text("") visible(0) $GROUPBOX {
-image bounds(183, 0, 20, 20) channel("Effect_Icon4")
-combobox bounds(220, 0, 100, 20) channel("EffectList4"), channelType("string"), value("Empty") $EFFECTLIST
-combobox bounds(0, 30, 140, 20), channel("EffectCombo1_4"), visible(0)
+;image bounds(183, 0, 20, 20) channel("Effect_Icon4")
+combobox bounds(220, 0, 100, 20) channel("EffectList4"), channelType("string"), value("Empty") $EFFECTLIST, _combox(1)
+combobox bounds(0, 30, 140, 20), channel("EffectCombo1_4"), visible(0), _combox(1)
 hslider bounds(0, 30, 200, 20), channel("EffectMacro1_4"), text("MACRO 1"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("EffectMacro2_4"), text("MACRO 2"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("EffectMacro3_4"), text("MACRO 3"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
@@ -126,7 +130,7 @@ hslider bounds(0, 80, 200, 20), channel("EffectMacro5_4"), text("MACRO 5"), rang
 hslider bounds(210, 80, 200, 20), channel("EffectMacro6_4"), text("MACRO 6"), range(0, 1, 0.1, 1, 0.001) $SLIDER1
 
 }
-optionbutton bounds(340, 0, 60, 20), latched(1), channel("EffectSelect"), colour:0(0, 0, 0, 200), items(" 1 >", " 2 >", " 3 >", " 4 >"), $BUTTON1
+optionbutton bounds(340, 0, 60, 20), latched(1), channel("EffectSelect"), items(" 1 >", " 2 >", " 3 >", " 4 >"), $BUTTON1
 
 
 
@@ -139,8 +143,8 @@ groupbox bounds(437,235,410,250), channel("SpectsGroup"), colour(0,0,0,0), lineT
 button bounds(5, 0, 60, 20), latched(1), channel("Arp"), text("ARP") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0)
 hslider bounds(0, 25, 200, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1, _scrambleCombo(1)
 hslider bounds(0, 50, 200, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1, _scrambleCombo(1)
-label bounds(215,2,95,16), align("left"), text("SPECTRAL FREEZE"), fontSize(13), fontStyle("Regular")
-combobox bounds(320, 0, 80, 20), latched(1), channel("SpectralFreeze"), items("Off", "Amp", "Freq", "Amp/Freq", "Blur"), value(1), automatable(1), _scrambleCombo(1)
+label bounds(215,2,95,16), align("left"), text("SPECTRAL FREEZE"), fontSize(13) $LABEL
+combobox bounds(320, 0, 80, 20), latched(1), channel("SpectralFreeze"), items("Off", "Amp", "Freq", "Amp/Freq", "Blur"), value(1), automatable(1), _scrambleCombo(1), _combox(1)
 hslider bounds(210, 25, 200, 20), channel("BlurTime"), text("BLUR TIME"), range(0.005, 2, 0.8, 0.5, 0.001), automatable(1), alpha(0.5), active(0) $SLIDER1
 
 }
@@ -149,41 +153,41 @@ hslider bounds(210, 25, 200, 20), channel("BlurTime"), text("BLUR TIME"), range(
 groupbox bounds(437,235,410,250), channel("RoutingGroup"), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), visible(0){
 
 label bounds(5,2,90,16), align("left"), text("MODULE CHAIN"), fontSize(12), fontStyle("Regular")
-combobox bounds(100, 0, 100, 20), items("Parallel","Spec > Grain","Grain > Spec"), channel("audioRouting"), value(1), automatable(0)
-label bounds(5,27,90,16), align("left"), text("STEREO MODE"), fontSize(12), fontStyle("Regular")
-image bounds(210, 0, 150, 90), channel("BinXYPad"), colour(30,30,30)
+combobox bounds(100, 0, 100, 20), items("Parallel","Spec > Grain","Grain > Spec"), channel("audioRouting"), value(1), automatable(0), _scrambleCombo(1), _combox(1)
+label bounds(5,27,90,16), align("left"), text("STEREO MODE"), fontSize(12) $LABEL
+image bounds(210, 0, 150, 90), channel("BinXYPad"), colour(120,120,120), _imageBlock(1)
 image bounds(300, 25, 20, 20), channel("BinPan"), colour(250,250,250), shape("ellipse")
-combobox bounds(100, 25, 100, 20), channel("StereoMode"), text("Left/Right", "Binaural"), colour(72,72,72,0), fontColour (255, 255, 255),value (1), automatable(0)
-label bounds(205,90,90,16), align("left"), text("-90°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
-label bounds(350,90,50,16), align("left"), text("450°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
-label bounds(278,90,50,16), align("left"), text("180°"), fontSize(12), fontStyle("Regular"), fontColour(200,200,0)
-label bounds(365,75,50,16), align("left"), text("-40°"), fontSize(12), fontStyle("Regular"), fontColour(0,200,200)
-label bounds(365,0,50,16), align("left"), text("90°"), fontSize(12), fontStyle("Regular"), fontColour(0,200,200)
+combobox bounds(100, 25, 100, 20), channel("StereoMode"), text("Left/Right", "Binaural"), value (1), automatable(0), _combox(1)
+label bounds(205,90,90,16), align("left"), text("-90°"), fontSize(12), fontColour(200,200,0) $LABEL
+label bounds(350,90,50,16), align("left"), text("450°"), fontSize(12), fontColour(200,200,0) $LABEL
+label bounds(278,90,50,16), align("left"), text("180°"), fontSize(12), fontColour(200,200,0) $LABEL
+label bounds(365,75,50,16), align("left"), text("-40°"), fontSize(12), fontColour(0,200,200) $LABEL
+label bounds(365,0,50,16), align("left"), text("90°"), fontSize(12),  fontColour(0,200,200) $LABEL
 
 }
 
-button bounds(85, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), $BUTTON1, automatable(0)
+button bounds(85, 190, 60, 20), latched(0), channel("CopyL"), text("COPY>R"), automatable(0), $BUTTON1
 
-button bounds(505, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L") $BUTTON1, automatable(0)
+button bounds(505, 190, 60, 20), latched(0), channel("CopyR"), text("COPY>L"), automatable(0), $BUTTON1
 
-button bounds(150, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), $BUTTON1, automatable(0)
-button bounds(215, 190, 60, 20), latched(0), channel("Jumble"), text("JUMBLE") $BUTTON1, automatable(0), value(0)
+button bounds(150, 190, 60, 20), latched(0), channel("Random"), text("RNDM"), automatable(0), $BUTTON1
+button bounds(215, 190, 60, 20), latched(0), channel("Jumble"), text("JUMBLE"), automatable(0), vlaue(0), $BUTTON1
 
 ;combobox bounds(168, 190, 70, 20), items("Hamming", "von Hamm", "Kaiser"), channel("WindowType"), automatable(0)
-combobox bounds(280, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0), _scrambleCombo(1)
+combobox bounds(280, 190, 60, 20), items("64","128","256","512","1024"), channel("AnalysisBands"), value(3), automatable(0), _scrambleCombo(1), _combox(1)
 
-button bounds(647, 190, 60, 20), latched(1), channel("Page_Spects"), text("FUNCT") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(0)
-button bounds(712, 190, 60, 20), latched(1), channel("Page_Modules"), text("EFFECTS") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(1)
-button bounds(777, 190, 60, 20), latched(1), channel("Page_Routing"), text("DIRECT") $BUTTON1, colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(0) 
+button bounds(647, 190, 60, 20), latched(1), channel("Page_Spects"), text("FUNCT"), colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(0) $BUTTON1
+button bounds(712, 190, 60, 20), latched(1), channel("Page_Modules"), text("EFFECTS") colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(1) $BUTTON1
+button bounds(777, 190, 60, 20), latched(1), channel("Page_Routing"), text("DIRECT") colour:1(250,250,250), fontColour:1(0,0,0), automatable(0), value(0) $BUTTON1
 
 
-optionbutton bounds(20, 190, 60, 20), latched(1), channel("TimeFeedModeL"), items("FILTER", "TIME", "FBACK") $BUTTON1, automatable(0)
-optionbutton bounds(440, 190, 60, 20), latched(1), channel("TimeFeedModeR"), items("FILTER", "TIME", "FBACK") $BUTTON1, automatable(0)
+optionbutton bounds(20, 190, 60, 20), latched(1), channel("TimeFeedModeL"), items("FILTER", "TIME", "FBACK"), automatable(0), $BUTTON1
+optionbutton bounds(440, 190, 60, 20), latched(1), channel("TimeFeedModeR"), items("FILTER", "TIME", "FBACK"), automatable(0), $BUTTON1
 
 //# Granular Control
 ;CHANNEL 1
 groupbox bounds(16,450,855,200), colour(0,0,0,0), lineThickness(0),outlineThickness(0){
-label bounds(5,0,400,16), align("left"), text("GRANULAR CONTROLS --------------------------------------"), fontSize(15), fontStyle("Regular")
+label bounds(5,0,400,16), align("left"), text("GRANULAR CONTROLS ------------------------------------------------------------------------------"), fontSize(15) $LABEL
 hslider bounds(0, 30, 200, 20), channel("Pitch1"), text("PITCH"), range(-2, 2, 1, 1, 0.0)  $SLIDER1
 hslider bounds(0, 55, 200, 20), channel("Stretch1"), text("STRETCH"), range(0.01, 2, 0.287, 1, 0.001) $SLIDER1
 hslider bounds(210, 30, 200, 20), channel("Density1"), text("DENSITY"), range(2, 20, 8, 1, 0.001) $SLIDER1
@@ -191,22 +195,22 @@ hslider bounds(210, 55, 200, 20), channel("Size1"), text("SIZE"), range(0.01, 1,
 hslider bounds(420, 30, 200, 20), channel("Start"), text("START"), range(0, 1, 0, 1, 0.001) $SLIDER1
 hslider bounds(420, 55, 200, 20), channel("End"), text("END"), range(0, 1, 1, 1, 0.001) $SLIDER1
 hslider bounds(630, 30, 200, 20), channel("Filter1"), text("FREQ"), range(10, 9000, 4000, 0.5, 0.001) $SLIDER1
-combobox bounds(633, 55, 70, 20), channel("Type1"), items("LPF", "HPF"), value(1), _scrambleCombo(1)
+combobox bounds(633, 55, 70, 20), channel("Type1"), items("LPF", "HPF"), value(1), _scrambleCombo(1), _combox(1)
 }
 
 
 
 groupbox bounds(16,545,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS -------------------------"), fontSize(15), fontStyle("Regular")
-     button bounds(342, 0, 60, 18), latched(1), channel("GranularModMode"), text("LFO","SPLINE"), $BUTTON1, automatable(0)
+    label bounds(5,0,400,16), align("left"), text("GRANULAR MODULATIONS -----------------------------------------------------------------"), fontSize(15) $LABEL
+     button bounds(342, 0, 60, 18), latched(1), channel("GranularModMode"), text("LFO","SPLINE"),  automatable(0) $BUTTON1
     //Granular LFO PANEL
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("GranularLFO"), visible(1) {
     hslider bounds(0,30, 200, 20), channel("GrainModRate1"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(0,55, 200, 20), channel("GrainModAmount1"), range(0,1,0.3,1,0.001), text ("AMOUNT") $SLIDER1
-    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape1"), value(2), _scrambleCombo(1)
+    combobox bounds(103, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape1"), value(2), _scrambleCombo(1), _combox(1)
     hslider bounds(210,30, 200, 20), channel("GrainModRate2"), range(0,10,1,0.5,0.001), text ("RATE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("GrainModAmount2"), range(0,1,0,1,0.001), text ("AMOUNT"), value(0.3), $SLIDER1
-    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2"), value(6), _scrambleCombo(1)
+    combobox bounds(313, 88, 70, 20), items("Sine","Tri","Square","Saw Up","Saw Dn","Random"), channel("GrainLFOShape2"), value(6), _scrambleCombo(1), _combox(1)
         }
     // Granular Spline Panel
     groupbox bounds(0,0,410,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100), channel("GranularSpline"), visible(0) {
@@ -215,15 +219,15 @@ groupbox bounds(16,545,410,150), colour(0,0,0,0), lineThickness(0),outlineThickn
     hslider bounds(210,30, 200, 20), channel("GranularSplineRange2"), range(0,1,0.1,1,0.001), text ("RANGE") $SLIDER1
     hslider bounds(210,55, 200, 20), channel("GranularSplineSpeed2"), range(0,10,3,0.5,0.001), text ("SPEED") $SLIDER1
     }
-    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1"), value(3), _scrambleCombo(1)
-    combobox bounds(210, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2"), value(2), _scrambleCombo(1)
+    combobox bounds(0, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest1"), value(3), _scrambleCombo(1), _combox(1)
+    combobox bounds(210, 88, 100, 20), items("Pitch", "Stretch", "Density", "Grain Size", "Start", "End", "Filter Freq"), channel("GrainLFODest2"), value(2), _scrambleCombo(1), _combox(1)
 
 }
 
 
 //# MIXER CONTROLS
 groupbox bounds(437,545,500,150), colour(0,0,0,0), lineThickness(0),outlineThickness(0), outlineColour(255,255,255,100){
-    label bounds(0,0,400,16), align("left"), text("MASTER BUS ---------------------------------------------"), fontSize(15), fontStyle("Regular")
+    label bounds(0,0,400,16), align("left"), text("MASTER BUS -----------------------------------------------------------------------------------------------------------------"), fontSize(15) $LABEL
     hslider bounds(0,30, 200, 20), channel("InputMix"), range(0,1,0.5,1), text ("INPUT") $SLIDER1
     hslider bounds(0,55, 200, 20), channel("SpectralMix"), range(0,1,0.5,1), text ("SPECTRAL") $SLIDER1
     hslider bounds(0,80, 200, 20), channel("GrainMix"), range(0,1,0.5,1), text ("GRAIN") $SLIDER1
@@ -234,10 +238,12 @@ groupbox bounds(437,545,500,150), colour(0,0,0,0), lineThickness(0),outlineThick
 }
 
 // Signal Display Out
-signaldisplay bounds(20, 360, 400, 70), displayType("spectrogram"), backgroundColour(20,20,20), zoom(-1), signalVariable("afftOutL"), skew(0.5)
-signaldisplay bounds(440, 360, 400, 70), displayType("spectrogram"), backgroundColour(20,20,20), zoom(-1), signalVariable("afftOutR"), skew(0.5)
+signaldisplay bounds(17, 360, 400, 70), displayType("spectrogram"), backgroundColour(120,120,120), zoom(-1), signalVariable("afftOutL"), skew(0.5), _imageBlock(1)
+signaldisplay bounds(440, 360, 400, 70), displayType("spectrogram"), backgroundColour(120,120,120), zoom(-1), signalVariable("afftOutR"), skew(0.5),  _imageBlock(1)
 }
 ;csoundoutput bounds(14, 198, 345, 172) channel("csoundoutput1"), fontColour(147, 210, 0)
+
+
 
 </Cabbage>
 <CsoundSynthesizer>
@@ -255,7 +261,7 @@ gifftsize = 1024
 gibinpts = 513
 gibands = gifftsize/16
 gidefaultVal = 0.7
-
+giMatrixOpacity = 0.4
 gSEffectDir = "includes/Effects/"
 giEffectDefault = 1 ; load effect defaults
 gieffectchannels = 10
@@ -264,6 +270,8 @@ zakinit gieffectchannels, 2
 #include "includes/SupportFiles/ImpulseTables.orc"
 
 #include "includes/SupportFiles/EffectsManager.orc"
+
+#include "includes/SupportFiles/LoreUIModes.orc"
 
 massign 0, 0
 
@@ -676,32 +684,32 @@ endif
 kLModeVal, kLmode cabbageGet "TimeFeedModeL"
 if kLModeVal == 0 then
     cabbageSet kLmode, "attenMatrixL", sprintfk("toFront(%i), alpha(%f)", 1, 1)
-    cabbageSet kLmode, "DelMatrixL", sprintfk("alpha(%f)", 0.5)
-    cabbageSet kLmode, "FBMatrixL", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kLmode, "DelMatrixL", sprintfk("alpha(%f)", giMatrixOpacity)
+    cabbageSet kLmode, "FBMatrixL", sprintfk("alpha(%f)", giMatrixOpacity)
 elseif kLModeVal == 1 then
     cabbageSet kLmode, "DelMatrixL", sprintfk("toFront(%i), alpha(%f)", 1, 1)
-    cabbageSet kLmode, "attenMatrixL", sprintfk("alpha(%f)", 0.5)
-    cabbageSet kLmode, "FBMatrixL", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kLmode, "attenMatrixL", sprintfk("alpha(%f)", giMatrixOpacity)
+    cabbageSet kLmode, "FBMatrixL", sprintfk("alpha(%f)", giMatrixOpacity)
 elseif kLModeVal == 2 then
     cabbageSet kLmode, "FBMatrixL", sprintfk("toFront(%i), alpha(%f)", 1, 1)
-    cabbageSet kLmode, "DelMatrixL", sprintfk("alpha(%f)", 0.5)
-    cabbageSet kLmode, "attenMatrixL", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kLmode, "DelMatrixL", sprintfk("alpha(%f)", giMatrixOpacity)
+    cabbageSet kLmode, "attenMatrixL", sprintfk("alpha(%f)", giMatrixOpacity)
 endif
 
 
 kRModeVal, kRmode cabbageGet "TimeFeedModeR"
 if kRModeVal == 0 then
     cabbageSet kRmode, "attenMatrixR", sprintfk("toFront(%i), alpha(%f)", 1, 1)
-    cabbageSet kRmode, "DelMatrixR", sprintfk("alpha(%f)", 0.5)
-    cabbageSet kRmode, "FBMatrixR", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kRmode, "DelMatrixR", sprintfk("alpha(%f)", giMatrixOpacity)
+    cabbageSet kRmode, "FBMatrixR", sprintfk("alpha(%f)", giMatrixOpacity)
 elseif kRModeVal == 1 then
     cabbageSet kRmode, "DelMatrixR", sprintfk("toFront(%i), alpha(%f)", 1, 1)
-    cabbageSet kRmode, "attenMatrixR", sprintfk("alpha(%f)", 0.5)
-    cabbageSet kRmode, "FBMatrixR", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kRmode, "attenMatrixR", sprintfk("alpha(%f)", giMatrixOpacity)
+    cabbageSet kRmode, "FBMatrixR", sprintfk("alpha(%f)", giMatrixOpacity)
 elseif kRModeVal == 2 then
     cabbageSet kRmode, "FBMatrixR", sprintfk("toFront(%i), alpha(%f)", 1, 1)
-    cabbageSet kRmode, "DelMatrixR", sprintfk("alpha(%f)", 0.5)
-    cabbageSet kRmode, "attenMatrixR", sprintfk("alpha(%f)", 0.5)
+    cabbageSet kRmode, "DelMatrixR", sprintfk("alpha(%f)", giMatrixOpacity)
+    cabbageSet kRmode, "attenMatrixR", sprintfk("alpha(%f)", giMatrixOpacity)
 endif
 
 //# Table Copy Function
@@ -1266,5 +1274,6 @@ endin
 i1 0 500000
 i5 0 500000 ;Effects Listener
 i99 0 500000 ;mixer
+i98 0 500000 ;color modes
 </CsScore>
 </CsoundSynthesizer>

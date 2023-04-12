@@ -109,3 +109,6 @@ endin
 
 instr 17, Orbiter
 endin
+
+instr 18, FluxShaper
+endin
