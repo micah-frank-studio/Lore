@@ -144,7 +144,7 @@ button bounds(5, 0, 60, 20), latched(1), channel("Arp"), text("ARP") $BUTTON1, c
 hslider bounds(0, 25, 200, 20), channel("ArpDepth"), text("ARP DEPTH"), range(0, 0.3, 0.1, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1, _scrambleCombo(1)
 hslider bounds(0, 50, 200, 20), channel("ArpSpeed"), text("ARP SPEED"), range(0.001, 0.5, 0.005, 0.5, 0.001), alpha(0.5), active(0) $SLIDER1, _scrambleCombo(1)
 label bounds(215,2,95,16), align("left"), text("SPECTRAL FREEZE"), fontSize(13) $LABEL
-combobox bounds(320, 0, 80, 20), latched(1), channel("SpectralFreeze"), items("Off", "Amp", "Freq", "Amp/Freq", "Blur"), value(1), automatable(1), _scrambleCombo(1), _combox(1)
+combobox bounds(320, 0, 80, 20), latched(1), channel("SpectralFreeze"), items("Off", "Amp", "Freq", "Amp/Freq", "Blur"), value(1), automatable(1)
 hslider bounds(210, 25, 200, 20), channel("BlurTime"), text("BLUR TIME"), range(0.005, 2, 0.8, 0.5, 0.001), automatable(1), alpha(0.5), active(0) $SLIDER1
 
 }
